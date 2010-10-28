@@ -1,3 +1,8 @@
+test("width", function() {
+    ok( jQuery("#test").css("width"), "10px" );
+    equals( jQuery("#test").css("width"), "10px", "returns correct values" );
+});
+
 test("padding", function() {
     ok( jQuery("#test").css("padding"), "1px 2px 3px 4px" );
     equals( jQuery("#test").css("padding"), "1px 2px 3px 4px", "returns values in the correct order" );
