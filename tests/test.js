@@ -17,3 +17,13 @@ test("backgroundPosition", function() {
     ok( jQuery("#test").css("backgroundPosition"), "3px 5px" );
     equals( jQuery("#test").css("backgroundPosition"), "3px 5px", "returns values in the correct order" );
 });
+
+test("backgroundPositionX", function() {
+    ok( jQuery("#test").css("backgroundPositionX"), "3px" );
+    equals( jQuery("#test").css("backgroundPositionX"), "3px", "returns proper value" );
+});
+
+test("backgroundPositionY", function() {
+    ok( jQuery("#test").css("backgroundPositionY"), "5px" );
+    equals( jQuery("#test").css("backgroundPositionY"), "5px", "returns proper value" );
+});
