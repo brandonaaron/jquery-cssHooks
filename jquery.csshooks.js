@@ -3,12 +3,12 @@
  */
 (function($) {
     // padding and margin get hooks
-    var dirs = "Top Right Bottom Right".split(" ");
+    var dirs = "Top Right Bottom Left".split(" ");
     $.each(["padding", "margin"], function( i, hook ) {
         $.cssHooks[ hook ] = {
             get: function( elem, computed, extra ) {
                 return $.map(dirs, function( dir ) {
-                    return $.style( elem, hook + dir );
+                    return $.css( elem, hook + dir );
                 }).join(" ");
             }
         };
