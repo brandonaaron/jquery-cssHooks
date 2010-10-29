@@ -2,7 +2,14 @@
 
 A collection of cssHooks that work with jQuery 1.4.3+.
 
-Currently normalizes the margin and backgroundPosition css getters.
+Currently normalizes the margin, padding, backgroundPosition, backgroundPositionX, and backgroundPositionY css getters.
+
+# Usage
+
+Super simple. Just request the margin, padding, backgroundPosition, backgroundPositionX, and/or backgroundPositionY like you would other CSS properties.
+
+    // #myElement { margin: 1px 2px 3px 4px; }
+    $('#myElement').css('margin'); // "1px 2px 3px 4px"
 
 # What are cssHooks?
 
