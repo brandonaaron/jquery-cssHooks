@@ -14,11 +14,11 @@
         };
     });
     // backgroundPosition get hook
-    var xy = ["X, Y"];
+    var xy = ["X","Y"];
     $.cssHooks.backgroundPosition = {
         get: function( elem, computed, extra ) {
-            return $.map(xy, function( k ) {
-                return $.style( elem, "backgroundPosition" + k ) + "px";
+            return $.map(xy, function( v, i ) {
+                return $.css(elem, "backgroundPosition" + v);
             }).join(" ");
         }
     };
