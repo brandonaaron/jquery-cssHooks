@@ -51,16 +51,20 @@ test("boxShadowColor", function() {
 
 test("boxShadowBlur", function() {
     equals( jQuery("#test").css("boxShadowBlur"), "10px", "returns just the blur" );
+    equals( jQuery("#test").css("boxShadowBlur", "42px").css("boxShadow"), "rgb(0, 0, 0) 1px 2px 42px 0px", "sets the blur properly" );
 });
 
 test("boxShadowSpread", function() {
     equals( jQuery("#test").css("boxShadowSpread"), "0px", "returns just the spread" );
+    equals( jQuery("#test").css("boxShadowSpread", "42px").css("boxShadow"), "rgb(0, 0, 0) 1px 2px 10px 42px", "sets the spread properly" );
 });
 
 test("boxShadowX", function() {
     equals( jQuery("#test").css("boxShadowX"), "1px", "returns just the x offset" );
+    equals( jQuery("#test").css("boxShadowX", "42px").css("boxShadow"), "rgb(0, 0, 0) 42px 2px 10px 0px", "sets the x offset properly" );
 });
 
 test("boxShadowY", function() {
     equals( jQuery("#test").css("boxShadowY"), "2px", "returns just y offset" );
+    equals( jQuery("#test").css("boxShadowY", "42px").css("boxShadow"), "rgb(0, 0, 0) 1px 42px 10px 0px", "sets the x offset properly" );
 });
