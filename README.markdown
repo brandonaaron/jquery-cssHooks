@@ -2,11 +2,14 @@
 
 A collection of cssHooks that work with jQuery 1.4.3+.
 
-Currently normalizes the margin, padding, backgroundPosition, backgroundPositionX, and backgroundPositionY css getters and setters.
+Current Hooks:
+ * margin and padding
+ * backgroundPosition, backgroundPositionX, backgroundPositionY
+ * boxShadow, boxShadowColor, boxShadowBlur, boxShadowSpread, boxShadowX, boxShadowY
 
 # Usage
 
-Super simple. Just request the margin, padding, backgroundPosition, backgroundPositionX, and/or backgroundPositionY like you would other CSS properties.
+Super simple. Just request the margin, padding, backgroundPosition, boxShadow, etc like you would other CSS properties.
 
     // #myElement { margin: 1px 2px 3px 4px; }
     $('#myElement').css('margin'); // "1px 2px 3px 4px"
@@ -17,6 +20,10 @@ What about setting properties?
     $('#myElement').css('boxShadow', '#ccc 5px 5px');
     $('#myElement').css('boxShadowColor', '#ff5e99');
     $('#myElement').css('boxShadowBlur', '0px');
+
+And even animating?!
+
+    $('#myElement').animate({ backgroundPositionY: 100 }, 500);
 
 # What are cssHooks?
 
