@@ -5,7 +5,8 @@
     // boxShadow get hooks
     var div = document.createElement('div'),
         divStyle = div.style,
-        support = $.support;
+        support = $.support,
+        props = "Property Duration TimingFunction".split(" ");
 
     support.transition =
         divStyle.MozTransition     === ''? 'MozTransition'    :
@@ -16,16 +17,30 @@
         false))));
 
     div = null;
-
+    
     if (support.transition) {
         $.cssHooks.transition = {
             get: function( elem, computed, extra ) {
-                return $.css(elem, support.transition + "Property") + " " + $.css(elem, support.transition + "Duration") + " " + $.css(elem, support.transition + "TimingFunction");
+                return $.map(props, function( l, i ) {
+                    return $.css(elem, support.transition + l);
+                }).join(" ");
             },
             set: function( elem, value ) {
                 elem.style[ support.transition ] = value;
             }
         };
+        
+        // breaks in Safari, stack overflow :o
+        // $.each(props, function( i, prop ) {
+        //     $.cssHooks[ support.transition + prop ] = {
+        //         get: function( elem, computed, extra ) {
+        //             return $.css(elem, support.transition + prop);
+        //         },
+        //         set: function( elem, value ) {
+        //             elem.style[ support.transition + prop ] = value;
+        //         }
+        //     };
+        // });
 
         $.cssHooks.transitionProperty = {
             get: function ( elem, computed, extra ) {
