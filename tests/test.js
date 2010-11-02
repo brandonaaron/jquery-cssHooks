@@ -40,11 +40,27 @@ test("backgroundPositionY", function() {
 });
 
 test("boxShadow", function() {
-    equals( jQuery("#test").css("boxShadow"), "rgb(0, 0, 0) 1px 1px 10px 0px", "returns values: color, x offset, y offset, blur, ???" );
+    equals( jQuery("#test").css("boxShadow"), "rgb(0, 0, 0) 1px 2px 10px 0px", "returns values: color, x offset, y offset, blur, ???" );
     equals( jQuery("#test").css("boxShadow", "#ccc 5px 5px 5px").css("boxShadow"), "rgb(204, 204, 204) 5px 5px 5px 0px", "sets the value properly" );
 });
 
 test("boxShadowColor", function() {
     equals( jQuery("#test").css("boxShadowColor"), "rgb(0, 0, 0)", "returns just the color" );
-    equals( jQuery("#test").css("boxShadowColor", "#ccc").css("boxShadow"), "rgb(204, 204, 204) 1px 1px 10px 0px", "sets the color properly" );
+    equals( jQuery("#test").css("boxShadowColor", "#ccc").css("boxShadow"), "rgb(204, 204, 204) 1px 2px 10px 0px", "sets the color properly" );
+});
+
+test("boxShadowBlur", function() {
+    equals( jQuery("#test").css("boxShadowBlur"), "10px", "returns just the blur" );
+});
+
+test("boxShadowSpread", function() {
+    equals( jQuery("#test").css("boxShadowSpread"), "0px", "returns just the spread" );
+});
+
+test("boxShadowX", function() {
+    equals( jQuery("#test").css("boxShadowX"), "1px", "returns just the x offset" );
+});
+
+test("boxShadowY", function() {
+    equals( jQuery("#test").css("boxShadowY"), "2px", "returns just y offset" );
 });

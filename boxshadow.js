@@ -33,6 +33,33 @@
                 elem.style[ support.boxShadow ] = value + " " + $.css(elem, support.boxShadow).split(/\)\s/)[1];
             }
         };
+        
+        $.cssHooks.boxShadowBlur = {
+            get: function ( elem, computed, extra ) {
+                return $.css(elem, support.boxShadow).split(/\s/)[5];
+            }
+        };
+        
+        $.cssHooks.boxShadowSpread = {
+            get: function ( elem, computed, extra ) {
+                return $.css(elem, support.boxShadow).split(/\s/)[6];
+            }
+        };
+        
+        
+        $.cssHooks.boxShadowX = {
+            get: function ( elem, computed, extra ) {
+                return $.css(elem, support.boxShadow).split(/\s/)[3];
+            }
+        };
+        
+        
+        $.cssHooks.boxShadowY = {
+            get: function ( elem, computed, extra ) {
+                return $.css(elem, support.boxShadow).split(/\s/)[4];
+            }
+        };
+        
     }
 
 })(jQuery);
