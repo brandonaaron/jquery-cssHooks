@@ -27,9 +27,11 @@
         
         $.cssHooks.boxShadowColor = {
             get: function ( elem, computed, extra ) {
-                return $.css(elem, support.boxShadow).split(/\)\s/)[0]+')';
+                return $.css(elem, support.boxShadow).split(/\)\s/)[0] + ')';
+            },
+            set: function( elem, value ) {
+                elem.style[ support.boxShadow ] = value + " " + $.css(elem, support.boxShadow).split(/\)\s/)[1];
             }
-            
         };
     }
 
