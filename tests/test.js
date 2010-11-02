@@ -41,4 +41,10 @@ test("backgroundPositionY", function() {
 
 test("boxShadow", function() {
     equals( jQuery("#test").css("boxShadow"), "rgb(0, 0, 0) 1px 1px 10px 0px", "returns values: color, x offset, y offset, blur, ???" );
+    equals( jQuery("#test").css("boxShadow", "#ccc 5px 5px 5px").css("boxShadow"), "rgb(204, 204, 204) 5px 5px 5px 0px", "sets the value properly" );
+});
+
+test("boxShadowColor", function() {
+    equals( jQuery("#test").css("boxShadowColor"), "rgb(0, 0, 0)", "returns just the color" );
+    equals( jQuery("#test").css("boxShadowColor", "#ccc").css("boxShadow"), "rgb(204, 204, 204) 1px 1px 10px 0px", "sets the color properly" );
 });

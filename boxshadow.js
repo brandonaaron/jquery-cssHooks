@@ -1,4 +1,4 @@
-/*! Copyright (c) 2010 Brandon Aaron (http://brandonaaron.net)
+/*! Copyright (c) 2010 Burin Asavesna (http://helloburin.com)
  * Licensed under the MIT License (LICENSE.txt).
  */
 (function($) {
@@ -24,7 +24,13 @@
                 elem.style[ support.boxShadow ] = value;
             }
         };
-
+        
+        $.cssHooks.boxShadowColor = {
+            get: function ( elem, computed, extra ) {
+                return $.css(elem, support.boxShadow).split(/\)\s/)[0]+')';
+            }
+            
+        };
     }
 
 })(jQuery);
