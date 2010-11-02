@@ -19,8 +19,12 @@
         $.cssHooks.boxShadow = {
             get: function( elem, computed, extra ) {
                 return $.css(elem, support.boxShadow);
+            },
+            set: function( elem, value ) {
+                elem.style[ support.boxShadow ] = value;
             }
         };
+
     }
 
 })(jQuery);
