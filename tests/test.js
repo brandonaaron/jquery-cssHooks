@@ -40,5 +40,5 @@ test("backgroundPositionY", function() {
 });
 
 test("boxShadow", function() {
-    equals( jQuery("#test").css("boxShadow"), "1px 1px 10px #000000", "returns values in the correct order (x offset, y offset, blur, color)" );
+    equals( jQuery("#test").css("boxShadow"), "rgb(0, 0, 0) 1px 1px 10px 0px", "returns values: color, x offset, y offset, blur, ???" );
 });
