@@ -54,15 +54,6 @@
             }
         };
 
-
-        // setup fx hooks
-        var fxHooks = "Blur Spread X Y".split(" ");
-        $.each(fxHooks, function( i, suffix ) {
-            var hook = "boxShadow" + suffix;
-            $.fx.step[ hook ] = function( fx ) {
-                $.cssHooks[ hook ].set( fx.elem, fx.now + fx.unit );
-            };
-        });
     }
 
 })(jQuery);
