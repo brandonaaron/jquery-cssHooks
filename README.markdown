@@ -3,6 +3,7 @@
 A collection of cssHooks that work with jQuery 1.4.3+.
 
 Current Hooks:
+
  * margin and padding
  * backgroundPosition, backgroundPositionX, backgroundPositionY
  * boxShadow, boxShadowColor, boxShadowBlur, boxShadowSpread, boxShadowX, boxShadowY
