@@ -17,7 +17,7 @@
 
     div = null;
 
-    if (support.transition) {
+    if ( support.transition && support.transition !== "Transition" ) {
         $.cssHooks.transition = {
             get: function( elem, computed, extra ) {
                 return $.map(props, function( prop, i ) {

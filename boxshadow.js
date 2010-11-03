@@ -25,7 +25,7 @@
         return parts.join(" ");
     }
 
-    if (support.boxShadow) {
+    if ( support.boxShadow && support.boxShadow !== "BoxShadow" ) {
         $.cssHooks.boxShadow = {
             get: function( elem, computed, extra ) {
                 return $.css(elem, support.boxShadow);
