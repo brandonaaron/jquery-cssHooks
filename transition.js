@@ -2,7 +2,6 @@
  * Licensed under the MIT License (LICENSE.txt).
  */
 (function($) {
-    // boxShadow get hooks
     var div = document.createElement('div'),
         divStyle = div.style,
         support = $.support,
