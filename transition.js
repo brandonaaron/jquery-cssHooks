@@ -17,57 +17,29 @@
         false))));
 
     div = null;
-    
+
     if (support.transition) {
         $.cssHooks.transition = {
             get: function( elem, computed, extra ) {
-                return $.map(props, function( l, i ) {
-                    return $.css(elem, support.transition + l);
+                return $.map(props, function( prop, i ) {
+                    return $.css(elem, support.transition + prop);
                 }).join(" ");
             },
             set: function( elem, value ) {
                 elem.style[ support.transition ] = value;
             }
         };
-        
-        // breaks in Safari, stack overflow :o
-        // $.each(props, function( i, prop ) {
-        //     $.cssHooks[ support.transition + prop ] = {
-        //         get: function( elem, computed, extra ) {
-        //             return $.css(elem, support.transition + prop);
-        //         },
-        //         set: function( elem, value ) {
-        //             elem.style[ support.transition + prop ] = value;
-        //         }
-        //     };
-        // });
 
-        $.cssHooks.transitionProperty = {
-            get: function ( elem, computed, extra ) {
-                return $.css(elem, support.transition + "Property");
-            },
-            set: function( elem, value ) {
-                elem.style[ support.transition + "Property" ] = value;
-            }
-        };
-
-        $.cssHooks.transitionDuration = {
-            get: function ( elem, computed, extra ) {
-                return $.css(elem, support.transition + "Duration");
-            },
-            set: function( elem, value ) {
-                elem.style[ support.transition + "Duration" ] = value;
-            }
-        };
-
-        $.cssHooks.transitionTimingFunction = {
-            get: function ( elem, computed, extra ) {
-                return $.css(elem, support.transition + "TimingFunction");
-            },
-            set: function( elem, value ) {
-                elem.style[ support.transition + "TimingFunction" ] = value;
-            }
-        };
+        $.each(props, function( i, prop ) {
+            $.cssHooks[ "transition" + prop ] = {
+                get: function( elem, computed, extra ) {
+                    return $.css(elem, support.transition + prop);
+                },
+                set: function( elem, value ) {
+                    elem.style[ support.transition + prop ] = value;
+                }
+            };
+        });
 
     }
 
