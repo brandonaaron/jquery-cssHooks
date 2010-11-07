@@ -12,7 +12,7 @@
         (divStyle.MsTransition     === ''? 'MsTransition'     :
         (divStyle.WebkitTransition === ''? 'WebkitTransition' :
         (divStyle.OTransition      === ''? 'OTransition'      :
-        (divStyle.Transition       === ''? 'Transition'       :
+        (divStyle.transition       === ''? 'Transition'       :
         false))));
 
     div = null;

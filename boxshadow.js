@@ -12,7 +12,7 @@
         (divStyle.MsBoxShadow     === ''? 'MsBoxShadow'     :
         (divStyle.WebkitBoxShadow === ''? 'WebkitBoxShadow' :
         (divStyle.OBoxShadow      === ''? 'OBoxShadow'      :
-        (divStyle.BoxShadow       === ''? 'BoxShadow'       :
+        (divStyle.boxShadow       === ''? 'BoxShadow'       :
         false))));
 
     div = null;
