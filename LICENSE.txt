@@ -1,4 +1,4 @@
-Copyright 2010 Brandon Aaron (http://brandonaaron.net) and Burin Asavesna (http://helloburin.com)
+Copyright 2010 Brandon Aaron (http://brandonaaron.net) and Burin Asavesna (http://helloburin.com) and Tom Ellis (http://www.webmuse.co.uk)
  
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
