@@ -131,7 +131,7 @@
 				css.cssText = "";
 				css.addRule( "#results", "border-radius:" + values.join(" ") );
 
-				elem.style.behavior = "url(js/border-radius.htc)";
+				elem.style.behavior = "url(border-radius.htc)";
 				
 				$.data(elem, "borderRadiusIE", values.join(" "));
 				$.data( elem, "borderRadiusIECSS", css);
