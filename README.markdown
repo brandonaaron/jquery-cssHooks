@@ -8,6 +8,7 @@ Current Hooks:
  * backgroundPosition, backgroundPositionX, backgroundPositionY
  * borderRadius, borderRadiusTopLeft, borderRadiusTopRight, borderRadiusBottomRight, borderRadiusBottomLeft
  * boxShadow, boxShadowColor, boxShadowBlur, boxShadowSpread, boxShadowX, boxShadowY
+ * borderImage
 
 # Usage
 
@@ -22,6 +23,7 @@ What about setting properties?
     $('#myElement').css('boxShadow', '#ccc 5px 5px');
     $('#myElement').css('boxShadowColor', '#ff5e99');
     $('#myElement').css('boxShadowBlur', '0px');
+    $('#myElement').css('borderImage', 'url(image.jpg) 27 27 27 27 round round');
 
 And even animating?!
 
@@ -35,4 +37,4 @@ jQuery 1.4.3 introduced the concept of cssHooks. They allow you to hook directly
 
 The cssHooks plugin is licensed under the MIT License (LICENSE.txt).
 
-Copyright (c) 2010 [Brandon Aaron](http://brandonaaron.net) and [Burin Asavesna](http://helloburin.com)
+Copyright (c) 2010 [Brandon Aaron](http://brandonaaron.net) and [Burin Asavesna](http://helloburin.com) and [Tom Ellis](http://www.webmuse.co.uk)
