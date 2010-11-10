@@ -6,6 +6,7 @@ Current Hooks:
 
  * margin and padding
  * backgroundPosition, backgroundPositionX, backgroundPositionY
+ * borderRadius, borderRadiusTopLeft, borderRadiusTopRight, borderRadiusBottomRight, borderRadiusBottomLeft
  * boxShadow, boxShadowColor, boxShadowBlur, boxShadowSpread, boxShadowX, boxShadowY
 
 # Usage
