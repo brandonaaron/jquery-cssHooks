@@ -1,8 +1,9 @@
 module("borderRadius");
 
-test("borderRadius", 2, function() {
+test("borderRadius", 3, function() {
     equals( jQuery("#test").css("borderRadius"), "5px 5px 5px 5px", "returns values in the correct order" );
-    equals( jQuery("#test").css("borderRadius", "3px").css("borderRadius"), "3px 3px 3px 3px", "sets the values properly" );
+    equals( jQuery("#test").css("borderRadius", "3px").css("borderRadius"), "3px 3px 3px 3px", "sets the values properly with 1 value" );
+    equals( jQuery("#test").css("borderRadius", "3px 0 0 3px").css("borderRadius"), "3px 0px 0px 3px", "sets the values properly with multiple values" );
 });
 
 test("borderRadiusTopLeft", 2, function() {

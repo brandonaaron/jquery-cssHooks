@@ -40,7 +40,8 @@
                 }).join(" ");
             },
             set: function( elem, value ) {
-                // takes in a single value or shorthand, e.g. 5px to set all, or 5px 0 0 5px to set left corners
+                // takes in a single value or shorthand (just letting the browser handle this) 
+                // e.g. 5px to set all, or 5px 0 0 5px to set left corners
                 elem.style[ borderCornerRadius( '', vendor_prefix ) ] = value;
             }
         };
