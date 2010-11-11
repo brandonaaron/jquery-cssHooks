@@ -38,4 +38,4 @@ jQuery 1.4.3 introduced the concept of cssHooks. They allow you to hook directly
 
 The cssHooks plugin is licensed under the MIT License (LICENSE.txt).
 
-Copyright (c) 2010 [Brandon Aaron](http://brandonaaron.net) and [Burin Asavesna](http://helloburin.com) and [Tom Ellis](http://www.webmuse.co.uk)
+Copyright (c) 2010 [Brandon Aaron](http://brandonaaron.net), [Burin Asavesna](http://helloburin.com) and [Tom Ellis](http://www.webmuse.co.uk)
