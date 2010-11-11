@@ -10,6 +10,7 @@ Current Hooks:
  * boxShadow, boxShadowColor, boxShadowBlur, boxShadowSpread, boxShadowX, boxShadowY
  * borderImage
  * Alternative Border Radius Plugin with support for IE 6,7 8
+ * boxReflect
 
 # Usage
 
