@@ -1,5 +1,6 @@
 /*! Copyright (c) 2010 Tom Ellis (http://www.webmuse.co.uk)
 * Licensed under the MIT License (LICENSE.txt).
+* Ideas from Brandon Aaron's cssHooks
 */
 (function($) {
     // Border Radius set and get hooks
@@ -131,7 +132,7 @@
 				css.cssText = "";
 				css.addRule( "#results", "border-radius:" + values.join(" ") );
 
-				elem.style.behavior = "url(border-radius.htc)";
+				elem.style.behavior = "url(js/border-radius.htc)";
 				
 				$.data(elem, "borderRadiusIE", values.join(" "));
 				$.data( elem, "borderRadiusIECSS", css);
