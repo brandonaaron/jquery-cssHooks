@@ -1,14 +1,13 @@
 /*! Copyright (c) 2010 Tom Ellis (http://www.webmuse.co.uk)
 * Licensed under the MIT License (LICENSE.txt).
-* Ideas from Brandon Aaron's cssHooks
 */
 (function($) {
     // Border Radius set and get hooks
 
 	var div = document.createElement("div"),
-	divStyle = div.style;
-
-	var dirs = "TopLeft TopRight BottomRight BottomLeft".split(/\s/);
+	divStyle = div.style,
+	rWhiteSpace = /\s/;
+	dirs = "TopLeft TopRight BottomRight BottomLeft".split(rWhiteSpace);
 	
 	$.support.borderRadius =
     divStyle.WebkitBorderRadius === ''? 'WebkitBorderRadius' :
@@ -57,7 +56,7 @@
 			set: function( elem, value ) {
 			
 			
-				var parts = value.split(/\s/),
+				var parts = value.split(rWhiteSpace),
 				values = {
 					"TopLeft": parts[0],
 					"TopRight": parts[1] || parts[0],
@@ -116,7 +115,7 @@
 
 				var css = ($.data( elem, "borderRadiusIECSS")) ? $.data( elem, "borderRadiusIECSS") : document.createStyleSheet("ie_style.css");
 
-				var parts = value.split(/\s/);
+				var parts = value.split(rWhiteSpace);
 				var one = parts[0];
 				var two = parts[1] || parts[0];
 				var three = parts[2] || parts[0];
