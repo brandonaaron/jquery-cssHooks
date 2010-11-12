@@ -32,13 +32,10 @@
 							ret = $.trim(shadow.replace(color.source, '')).split(rWhitespace)[pos - 1];
 						}
 						
-						// console.log('get()', props[i], 'got', ret);
 						return ret;
 					})(elem, i);
 				},
 				set: function(elem, value) {
-					// console.log('set()', props[i], 'to', value);
-					
 					elem.style.textShadow = (function(string, value, index) {
 						var color_part = $.css(elem, 'textShadowColor'),
 							parts = string.replace(color_part, '').split(rWhitespace),
@@ -57,10 +54,38 @@
 			
 			if (i !== 0) {
 				$.fx.step[hook] = function(fx) {
-					// console.log(fx);
 					$.cssHooks[hook].set(fx.elem, fx.now + fx.unit);
 				};
 			}
 		});
+		
+		// $.fx.step.textShadow = function(fx) {
+		// 	var css = $.css(fx.elem, 'textShadow'),
+		// 		color_part = $.color.normalize(css).source,
+		// 		parts = css.replace(color_part, '').split(rWhitespace),
+		// 		css_props = {},
+		// 		options = {
+		// 			duration: fx.options.duration,
+		// 			easing: fx.options.easing,
+		// 			complete: fx.options.complete,
+		// 			step: fx.options.step,
+		// 			queue: fx.options.queue,
+		// 			specialEasing: fx.options.specialEasing
+		// 		};
+		// 		
+		// 	// console.log(fx.pos, fx);
+		// 	// console.log('css', css)
+		// 	// console.log('color', color_part)
+		// 	// console.log('parts', parts)
+		// 	
+		// 	$.each(props, function(i, suffix) {
+		// 		css_props['textShadow' + suffix] = (i === 0) ? color_part : parts[i];
+		// 	});
+		// 	
+		// 	// console.log('properties', css_props);
+		// 	// console.log('options', options)
+		// 	
+		// 	$(fx.elem).animate(css_props, options);
+		// };
 	}
 })(jQuery);
