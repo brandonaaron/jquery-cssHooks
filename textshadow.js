@@ -32,12 +32,12 @@
 							ret = $.trim(shadow.replace(color.source, '')).split(rWhitespace)[pos - 1];
 						}
 						
-						console.log('get()', props[i], 'got', ret);
+						// console.log('get()', props[i], 'got', ret);
 						return ret;
 					})(elem, i);
 				},
 				set: function(elem, value) {
-					console.log('set()', props[i], 'to', value);
+					// console.log('set()', props[i], 'to', value);
 					
 					elem.style.textShadow = (function(string, value, index) {
 						var color_part = $.css(elem, 'textShadowColor'),
@@ -56,7 +56,7 @@
 			};
 			
 			$.fx.step[hook] = function(fx) {
-				console.log(fx);
+				// console.log(fx);
 				$.cssHooks[hook].set(fx.elem, fx.now + fx.unit);
 			};
 		});

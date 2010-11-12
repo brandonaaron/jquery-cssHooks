@@ -251,7 +251,6 @@
 		}
 	};
 	
-
 	// if ($.cssHooks) {
 	// 	$.each(props, function(i, hook) {
 	// 		$.fx.step[hook] = function(fx) {
