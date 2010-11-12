@@ -55,10 +55,12 @@
 				}
 			};
 			
-			$.fx.step[hook] = function(fx) {
-				// console.log(fx);
-				$.cssHooks[hook].set(fx.elem, fx.now + fx.unit);
-			};
+			if (i !== 0) {
+				$.fx.step[hook] = function(fx) {
+					// console.log(fx);
+					$.cssHooks[hook].set(fx.elem, fx.now + fx.unit);
+				};
+			}
 		});
 	}
 })(jQuery);

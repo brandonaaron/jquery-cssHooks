@@ -2,7 +2,7 @@ module("textShadow");
 
 test("textShadow", 2, function() {
     equals( jQuery("#test").css("textShadow"), "rgb(0, 0, 0) 1px 1px 1px", "returns values: color, x offset, y offset, blur" );
-    equals( jQuery("#test").css("textShadow", "#ccc 1px 2px 3px").css("textShadow"), "#ccc 1px 2px 3px", "sets the value properly" );
+    equals( jQuery("#test").css("textShadow", "#fff 1px 2px 3px").css("textShadow"), "rgb(255, 255, 255) 1px 2px 3px", "sets the value properly" );
 });
 
 test("textShadowColor", 10, function() {

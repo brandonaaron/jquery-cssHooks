@@ -150,7 +150,7 @@
 			transparent: { r:-1, g:-1, b:-1 }
 		},
 		// Not a complete list yet...
-		props = 'backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor borderColor color outlineColor'.split(' ');
+		props = 'backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor borderColor color outlineColor textShadowColor'.split(' ');
 
 	$.color = {
 		normalize: function(input) {
@@ -201,15 +201,19 @@
 			}
 			// Handle color: hsl[a](h%, s%, l% [, a])
 			else if (result = rhsl.exec(input)) {
-				color = $.color.hsl_to_rgb([parseFloat(result[1], 10) / 100, parseFloat(result[2], 10) / 100, parseFloat(result[3], 10) / 100]);
+				color = $.color.hsl_to_rgb(
+							parseFloat(result[1], 10) / 100,
+							parseFloat(result[2], 10) / 100,
+							parseFloat(result[3], 10) / 100
+						);
 				color.alpha = parseFloat(result[4], 10);
 				color.source = result[0];
 			}
 			// Handle color: name
 			else {
 				result = input.split(' ');
-				for (var i = 0, l = result.length; i < l; i++) {
-					var name = result[i];
+				for (i = 0, l = result.length; i < l; i++) {
+					name = result[i];
 					
 					if (colornames[name]) {
 						color = colornames[name];
@@ -223,18 +227,22 @@
 		},
 		
 		hsl_to_rgb: function(h, s, l) {
-			var m1, m2;
+			var r, g, b, m1, m2;
 
-			if (l <= 0.5) {
-				m2 = l * (s + 1);
+			if (s === 0) {
+				r = g = b = l;
 			} else {
-				m2 = (l + s) - (l * s);
-			}
+				if (l <= 0.5) {
+					m2 = l * (s + 1);
+				} else {
+					m2 = (l + s) - (l * s);
+				}
 
-			m1 = (l * 2) - m2;
-			r = $.color.hue_to_rgb(m1, m2, h + (1/3));
-			g = $.color.hue_to_rgb(m1, m2, h);
-			b = $.color.hue_to_rgb(m1, m2, h - (1/3));
+				m1 = (l * 2) - m2;
+				r = 255 * $.color.hue_to_rgb(m1, m2, h + (1/3));
+				g = 255 * $.color.hue_to_rgb(m1, m2, h);
+				b = 255 * $.color.hue_to_rgb(m1, m2, h - (1/3));
+			}
 
 			return { r:r, g:g, b:b };
 		},
@@ -243,20 +251,27 @@
 			if (h < 0) { h++; }
 			if (h > 1) { h--; }
 
-			if ((h * 6) < 1) { return m1 + ((m2 - m1) * h * 6); }
-			if ((h * 2) < 1) { return m2; }
-			if ((h * 3) < 2) { return m1 + ((m2 - m1) * ((2/3) - h) * 6); }
-
-			return m1;
+			if ((h * 6) < 1)		{ return m1 + ((m2 - m1) * h * 6); }
+			else if ((h * 2) < 1)	{ return m2; }
+			else if ((h * 3) < 2)	{ return m1 + ((m2 - m1) * ((2/3) - h) * 6); }
+			else					{ return m1; }
 		}
 	};
 	
-	// if ($.cssHooks) {
-	// 	$.each(props, function(i, hook) {
-	// 		$.fx.step[hook] = function(fx) {
-	// 			console.log(fx)
-	// 			$.css(fx.elem, fx.now + fx.unit);
-	// 		};
-	// 	});
-	// }
+	if ($.cssHooks) {
+		$.each(props, function(i, hook) {
+			$.fx.step[hook] = function(fx) {
+				if (!fx.start) {
+					fx.start = $.color.normalize($.css(fx.elem, hook));
+					fx.end = $.color.normalize(fx.end);
+				}
+				
+				$.style(fx.elem, hook, 'rgb('
+					+ parseInt(fx.start.r + (fx.pos * (fx.end.r - fx.start.r)), 10) + ','
+					+ parseInt(fx.start.g + (fx.pos * (fx.end.g - fx.start.g)), 10) + ','
+					+ parseInt(fx.start.b + (fx.pos * (fx.end.b - fx.start.b)), 10) + ')'
+				);
+			};
+		});
+	}
 })(jQuery);
