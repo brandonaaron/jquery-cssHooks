@@ -5,7 +5,9 @@
     // boxShadow get hooks
     var div = document.createElement('div'),
         divStyle = div.style,
-        support = $.support;
+        support = $.support,
+        rWhitespace = /\s/,
+        rParenWhitespace = /\)\s/;
 
     support.boxShadow =
         divStyle.MozBoxShadow     === ''? 'MozBoxShadow'    :
@@ -20,7 +22,7 @@
     // helper function to inject a value into an existing string
     // is there a better way to do this? it seems like a common pattern
     function insert_into(string, value, index) {
-        var parts  = string.split(/\s/);
+        var parts  = string.split(rWhitespace);
         parts[index] = value;
         return parts.join(" ");
     }
@@ -37,16 +39,16 @@
 
         $.cssHooks.boxShadowColor = {
             get: function ( elem, computed, extra ) {
-                return $.css(elem, support.boxShadow).split(/\)\s/)[0] + ')';
+                return $.css(elem, support.boxShadow).split(rParenWhitespace)[0] + ')';
             },
             set: function( elem, value ) {
-                elem.style[ support.boxShadow ] = value + " " + $.css(elem, support.boxShadow).split(/\)\s/)[1];
+                elem.style[ support.boxShadow ] = value + " " + $.css(elem, support.boxShadow).split(rParenWhitespace)[1];
             }
         };
 
         $.cssHooks.boxShadowBlur = {
             get: function ( elem, computed, extra ) {
-                return $.css(elem, support.boxShadow).split(/\s/)[5];
+                return $.css(elem, support.boxShadow).split(rWhitespace)[5];
             },
             set: function( elem, value ) {
                 elem.style[ support.boxShadow ] = insert_into($.css(elem, support.boxShadow), value, 5);
@@ -55,7 +57,7 @@
 
         $.cssHooks.boxShadowSpread = {
             get: function ( elem, computed, extra ) {
-                return $.css(elem, support.boxShadow).split(/\s/)[6];
+                return $.css(elem, support.boxShadow).split(rWhitespace)[6];
             },
             set: function( elem, value ) {
                 elem.style[ support.boxShadow ] = insert_into($.css(elem, support.boxShadow), value, 6);
@@ -64,7 +66,7 @@
 
         $.cssHooks.boxShadowX = {
             get: function ( elem, computed, extra ) {
-                return $.css(elem, support.boxShadow).split(/\s/)[3];
+                return $.css(elem, support.boxShadow).split(rWhitespace)[3];
             },
             set: function( elem, value ) {
                 elem.style[ support.boxShadow ] = insert_into($.css(elem, support.boxShadow), value, 3);
@@ -73,7 +75,7 @@
 
         $.cssHooks.boxShadowY = {
             get: function ( elem, computed, extra ) {
-                return $.css(elem, support.boxShadow).split(/\s/)[4];
+                return $.css(elem, support.boxShadow).split(rWhitespace)[4];
             },
             set: function( elem, value ) {
                 elem.style[ support.boxShadow ] = insert_into($.css(elem, support.boxShadow), value, 4);

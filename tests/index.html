@@ -19,13 +19,15 @@
 			border-image: url("border.png") 27 27 27 27 round round;
 			-moz-border-image: url("border.png") 27 27 27 27 round round;
 			-webkit-border-image: url("border.png") 27 27 27 27 round round;
-			
 			-webkit-box-reflect: below 3px;-moz-box-reflect: below 3px;-o-box-reflect: below 3px;box-reflect: below 3px;
+			text-shadow: rgb(0,0,0) 1px 1px 1px;/*, -5px -5px 5px #bada55, 0 0 0 #000;*/
 		}
 	</style>
 	<script src="jquery-1.4.3.js"></script>
 	<script src="qunit/qunit.js"></script>
 	<!-- cssHooks -->
+	<script src="../color.js"></script>
+	<script src="../textshadow.js"></script>
 	<script src="../bgpos.js"></script>
 	<script src="../borderradius.js"></script>
 	<script src="../boxshadow.js"></script>
@@ -36,6 +38,8 @@
 	<script src="../borderradiusalt.js"></script>
 	<script src="../boxreflect.js"></script>
 	<!-- unit tests -->
+	<script src="unit/color.js"></script>
+	<script src="unit/textshadow.js"></script>
 	<script src="unit/bgpos.js"></script>
 	<script src="unit/borderradius.js"></script>
 	<script src="unit/boxshadow.js"></script>
@@ -53,7 +57,7 @@
 	<h2 id="qunit-userAgent"></h2>
 	<ol id="qunit-tests"></ol>
 	<div id="qunit-fixture">
-		<div id="test"></div>
+		<div id="test">Hello World</div>
 	</div>
 </body>
 </html>
