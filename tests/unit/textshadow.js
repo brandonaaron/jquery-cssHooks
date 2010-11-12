@@ -5,17 +5,14 @@ test("textShadow", 2, function() {
     equals( jQuery("#test").css("textShadow", "#fff 1px 2px 3px").css("textShadow"), "rgb(255, 255, 255) 1px 2px 3px", "sets the value properly" );
 });
 
-test("textShadowColor", 10, function() {
+test("textShadowColor", 3, function() {
     equals( jQuery("#test").css("textShadowColor"), "rgb(0, 0, 0)", "returns just the color" );
     equals( jQuery("#test").css("textShadowColor", "rgb(100, 150, 200)").css("textShadowColor"), "rgb(100, 150, 200)", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "#bada55").css("textShadowColor"), "#bada55", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "red").css("textShadowColor"), "red", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "lawngreen").css("textShadowColor"), "lawngreen", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "rgba(0, 0, 0, 0.3)").css("textShadowColor"), "rgba(0, 0, 0, 0.3)", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "rgba(0, 255, 0, 0.5)").css("textShadowColor"), "rgba(0, 255, 0, 0.5)", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "rgb(33%, 66%, 99%)").css("textShadowColor"), "rgb(33%, 66%, 99%)", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "hsl(75%, 50%, 25%)").css("textShadowColor"), "hsl(75%, 50%, 25%)", "sets the color properly" );
-    equals( jQuery("#test").css("textShadowColor", "hsla(10%, 20%, 30%, 0.4)").css("textShadowColor"), "hsla(10%, 20%, 30%, 0.4)", "sets the color properly" );
+	stop();
+    jQuery("#test").animate({ textShadowColor: 'rgb(255, 255, 255)' }, 100, function() {
+        equals( jQuery("#test").css("textShadowColor"), "rgb(255, 255, 255)", "animates the color properly" );
+        start();
+    });
 });
 
 test("textShadowX", 3, function() {
