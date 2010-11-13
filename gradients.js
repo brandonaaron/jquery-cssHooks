@@ -16,6 +16,10 @@
     
 	//Todo: improve regex reuse / logic
 	var rWhitespace = /\s/,
+	rWhiteGlobal = /\s/g,
+	rRgba = /\,rgb/gi,
+	rContainRgba = /rgb(a?)/i;
+	sRgbaReplace = "|rgb",
 	prefix = "Moz Webkit ".split(rWhitespace),
 	cssProps1 = "background backgroundImage listStyleImage";
 	
@@ -44,7 +48,15 @@
     $.support.linearGradient =
     div.style.backgroundImage.indexOf( "-moz-linear-gradient" )  > -1 ? '-moz-linear-gradient' :
     (div.style.backgroundImage.indexOf( "-webkit-gradient" )  > -1 ? '-webkit-gradient' :
-    (div.style.backgroundImage.indexOf( "gradient" )  > -1 ? 'gradient' : false));
+    (div.style.backgroundImage.indexOf( "linear-gradient" )  > -1 ? 'linear-gradient' : false));
+    
+    var css2 = "background-image:-webkit-gradient(radial, center center, 0, center center, 100, from(orange), to(red)); gradient(radial,left top,right bottom, from(#9f9), to(white));background-image:-webkit-gradient(radial,left top,right bottom,from(#9f9),to(white));background-image:-moz-gradient(radial,left top,right bottom,from(#9f9),to(white));background-image:-o-gradient(radial,left top,right bottom,from(#9f9),to(white));background-image:-ms-gradient(radial,left top,right bottom,from(#9f9),to(white));background-image:-khtml-gradient(radial,left top,right bottom,from(#9f9),to(white));background-image:radial-gradient(left top,#9f9, white);background-image:-webkit-radial-gradient(left top,#9f9, white);background-image:-moz-radial-gradient(left top,#9f9, white);background-image:-o-radial-gradient(left top,#9f9, white);background-image:-ms-radial-gradient(left top,#9f9, white);background-image:-khtml-radial-gradient(left top,#9f9, white);";    
+    div.style.cssText = css2;
+    
+    $.support.radialGradient =
+    div.style.backgroundImage.indexOf( "-moz-radial-gradient" )  > -1 ? '-moz-radial-gradient' :
+    (div.style.backgroundImage.indexOf( "-webkit-gradient" )  > -1 ? '-webkit-gradient' :
+    (div.style.backgroundImage.indexOf( "radial-gradient" )  > -1 ? 'radial-gradient' : false));
     
     
     //Remove these as some point not needed
@@ -56,7 +68,7 @@
     
     //Normalises between Moz/W3c and Webkit
     //Moz/W3c uses shorter position, Webkit uses longer position
-    var pos = {
+    var posLinear = {
     
         "left top" : "left top, right bottom",
         "left bottom" : "left bottom, right bottom",
@@ -72,7 +84,15 @@
         "bottom" : "left bottom, left top",
         "left" : "left top, right top",
         "right" : "left top, right top"
-    }
+    };
+    
+    var posRadial = {
+    
+        "center" : "center center, 0, center center, 100",
+		"farthest-side" : "60%"
+    };
+    
+
     
 	//Needed as Webkit browsers support gradients differently	
     $.support.isWebkit = ( $.support.linearGradient === "-webkit-gradient" ) ? true : false;
@@ -91,22 +111,23 @@
 			$.cssHooks[prop] = {
         
         		//Causes recursion error due to checking for "get: in cssHook
-        		//Not really needed
+        		//Not really needed as we only want to be able to override setting a style, not really getting
 				/*get: function( elem, computed, extra ) {
 				
-					return $.css(elem, prop, "background-image");
+					return $.css(elem, prop);
 				},*/
 				set: function( elem, value ) {
-				
+					//alert( value  );
 					if( /^(.*)(:?linear-gradient|linearGradient)(.*)$/i.test( value ) )
 					{
+						//TODO: need to check for mulitple backgrounds
 						//alert( linearSettings( value ) );
 						elem.style[prop] = linearSettings( value );
 					}
-					else if ( /^(.*)(:?radial-gradient|radialGradient)(.*)$/i.test( value ) )
+					else if ( /(^|\s)(:?radial-gradient|radialGradient)(.*)$/i.test( value ) )
 					{
-						//todo
-						//elem.style[prop] = radialSettings( value );
+						//TODO: need to check for mulitple backgrounds
+						elem.style[prop] = radialSettings( value );
 					}
 					else
 					{
@@ -122,8 +143,10 @@
     
     function linearSettings( value ){
     
+    	//alert( value );
+    
         var parts = /^(.*)(:?linear-gradient|linearGradient)(\()(.*)(\))(.*)$/i.exec( value );
-        var details = [], colourFrom, colourTo, position, percentage;
+        var details = [], colourFrom, colourTo, position, percentage, isRgb = false;
          
 		//part[1] & [6] = other settings	
         //parts[2] = gradient name;
@@ -134,6 +157,114 @@
         value = value.replace( parts[2] , $.support.linearGradient );
         //alert( value );
         
+        
+        //rgb/rgba colours
+        if ( containsRGB( parts[4] ) )
+        {
+        	details = parseRGB( parts[4] );
+        	isRgb = true;
+        }
+        else
+        {
+        	details = $.trim(parts[4]).split(",");
+        }
+        
+        //Only colours passed
+        if ( details.length === 2 )
+        {
+            //need to not overwrite other parts of background settings
+            if ( $.support.isWebkit )
+            {
+
+                var template = webkitlinear;
+
+				template = template.replace( "{colours}",  "left top, left bottom, from(" + details[0] + "), to(" + details[1] + ")" );
+				template = template.replace( "{position}", "" );
+                
+
+                value =  parts[1] + template + " " + parts[6];
+            }
+            
+            return value;
+        }
+        //alert( "here" );
+                
+        //Position and 2 ( or more ) Colours set
+        position = details[0];
+        
+        details[1] = $.trim(details[1]);
+        
+        percentage = (details[1].split(rWhitespace).length !== 1) ? parseInt(details[1].split(rWhitespace)[1])/100 : "0",
+        
+        colourFrom = "color-stop(" + percentage + "%, " + details[1].split(" ")[0] + ")";
+        
+        //colourTo
+        var otherColours = [];
+        colourTo = "";
+        
+        var a = 1;
+        for ( var i = 2; i < details.length; i++ )
+        {
+            details[i] = $.trim( details[i] );
+            
+            percentage = (details[i].split(rWhitespace).length !== 1) ? parseInt(details[i].split(rWhitespace)[1])/100 : Math.round( 100 / (details.length - 2) ) / 100;
+            
+            percentage = ( i == ( details.length - 1 ) ) ? "100" : ( percentage * a );
+            
+            otherColours.push ("color-stop(" + percentage + "%, " + details[i].split(rWhitespace)[0] + ")" );
+            a++;
+        }
+        
+        //alert("1");
+        
+        colourTo = otherColours.join(", ");
+        
+        //alert( colourTo );
+        
+        //Change formatting of css
+        //Don't need to do this for firefox as it is same as W3C Spec
+        if ( $.support.isWebkit )
+        {
+        	//alert("2");
+        	//Need to Improve this logic
+            var template = webkitlinear;
+            template = template.replace( "{colours}", "," + colourFrom + "," + colourTo );
+            
+            //alert( template );
+            //template = template.replace( "{position}", position + ",  right bottom" );
+            //var pos = pos[position] || position;
+
+            var pos2 = posLinear[position] || position;
+
+           // alert( pos2 );
+            template = template.replace( "{position}", pos2 );
+            
+            alert( template );
+            
+            value =  parts[1] + template + " " + parts[6];
+            
+           // alert("3");
+        }
+		
+		//alert( value );
+        return value;            
+    }
+    
+    function radialSettings( value ){
+    
+    	//alert( value );
+    	var parts = /^(.*)(:?radial-gradient|radialGradient)(\()(.*)(\))(.*)$/i.exec( value );
+        var details = [], colourFrom, colourTo, position, percentage;
+         
+		//part[1] & [6] = other settings	
+        //parts[2] = gradient name;
+        //parts[3] & [5] = ( and )
+        //parts[4] = gradient settings (position, colours);
+        
+        //Replaces linear-gradient with browser specific gradient e.g. -moz-linear-gradient
+        value = value.replace( parts[2] , $.support.radialGradient );
+        //alert( value );
+        
         details = $.trim(parts[4]).split(",");
         
         //Only colours passed
@@ -142,19 +273,20 @@
             //need to not overwrite other parts of background settings
             if ( $.support.isWebkit )
             {
-                var template = webkitlinear;
+                var template = webkitradial;
                 
                 var colours = parts[4].split(",");
                 
-                template = template.replace( "{colours}",  "left top, left bottom, from(" + colours[0] + "), to(" + colours[1] + ")" );
+                template = template.replace( "{colours}",  "center center, 0, center center, 100, from(" + colours[0] + "), to(" + colours[1] + ")" );
                 template = template.replace( "{position}", "" );
                 
+                //Put back together
                 value =  parts[1] + template + " " + parts[6];
             }
 
             return value;
         }
-                
+        /*        
         //Position and 2 ( or more ) Colours set
         
         position = details[0];
@@ -199,14 +331,31 @@
             
             value =  parts[1] + template + " " + parts[6];
         }
+        */
 		
 		
-        return value;            
+        return value;  
     }
     
-    function radialSettings(){
+    function containsRGB( value )
+    {
+    	/*if ( $.trim( value ).indexOf("rgb") > -1 || $.trim( value ).indexOf("rgba") > -1 )
+    	{
+    		return true;
+    	}
+    	
+    	return false;*/
+    	
+    	return ( rContainRgba.test(  $.trim( value ) ) );
+    }
     
-    	//Todo
+    function parseRGB( value )
+    {
+    	//Parse each rgb/rgba value out
+    	var newValue;
+    	newValue = $.trim( value ).replace(rWhiteGlobal, "").replace(rRgba, sRgbaReplace).split("|");
+
+    	return newValue;
     }
     
     div = null;
