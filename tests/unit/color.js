@@ -2,7 +2,7 @@ module("color");
 
 test("Basic getting & setting", 10, function() {
 	equals( jQuery("#test").css("color"), "rgb(0, 0, 0)", "returns just the color" );
-    equals( jQuery("#test").css("color", "rgb(100, 150, 200)").css("color"), "rgb(100, 150, 200)", "sets the color properly" );
+	equals( jQuery("#test").css("color", "rgb(100, 150, 200)").css("color"), "rgb(100, 150, 200)", "sets the color properly" );
 	equals( jQuery("#test").css("color", "#bada55").css("color"), "#bada55", "sets the color properly" );
 	equals( jQuery("#test").css("color", "red").css("color"), "red", "sets the color properly" );
 	equals( jQuery("#test").css("color", "lawngreen").css("color"), "lawngreen", "sets the color properly" );

@@ -161,7 +161,7 @@
 				rrgb		= /rgb(?:a)?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(0*\.?\d+)\s*)?\)/,
 				rrgbpercent	= /rgb(?:a)?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(0*\.?\d+)\s*)?\)/,
 				rhsl		= /hsl(?:a)?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(0*\.?\d+)\s*)?\)/;
-
+			
 			// Handle color: #rrggbb
 			if (result = rhex.exec(input)) {
 				color = {
@@ -193,9 +193,9 @@
 			// Handle color: rgb[a](r%, g%, b% [, a])
 			else if (result = rrgbpercent.exec(input)) {
 				color = {
-					r:		parseFloat(result[1], 10) * 2.55,
-					g:		parseFloat(result[2], 10) * 2.55,
-					b:		parseFloat(result[3], 10) * 2.55,
+					r:		parseInt(result[1] * 2.55, 10),
+					g:		parseInt(result[2] * 2.55, 10),
+					b:		parseInt(result[3] * 2.55, 10),
 					alpha:	parseFloat(result[4], 10),
 					source:	result[0]
 				};
@@ -249,9 +249,9 @@
 				}
 
 				m1 = (l * 2) - m2;
-				r = 255 * $.color.hue_to_rgb(m1, m2, h + (1/3));
-				g = 255 * $.color.hue_to_rgb(m1, m2, h);
-				b = 255 * $.color.hue_to_rgb(m1, m2, h - (1/3));
+				r = parseInt(255 * $.color.hue_to_rgb(m1, m2, h + (1/3)), 10);
+				g = parseInt(255 * $.color.hue_to_rgb(m1, m2, h), 10);
+				b = parseInt(255 * $.color.hue_to_rgb(m1, m2, h - (1/3)), 10);
 			}
 
 			return { r:r, g:g, b:b, alpha:a };
@@ -270,6 +270,18 @@
 	
 	if ($.cssHooks) {
 		$.each(props, function(i, hook) {
+			$.cssHooks[hook] = {
+				set: function(elem, value) {
+					value = $.color.normalize(value);
+					
+					if (!value.alpha) {
+						value.alpha = 1;
+					}
+					
+					elem.style[hook] = 'rgba(' + value.r + ',' + value.g + ',' + value.b + ',' + value.alpha + ')';
+				}
+			};
+			
 			$.fx.step[hook] = function(fx) {
 				var val;
 				
