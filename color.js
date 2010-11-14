@@ -158,25 +158,26 @@
 				result, name, i, l,
 				rhex		= /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/,
 				rhexshort	= /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/,
-				rrgb		= /rgb(?:a)?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(0*\.\d+)\s*)?\)/,
-				rrgbpercent	= /rgb(?:a)?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(0*\.\d+)\s*)?\)/,
-				rhsl		= /hsl(?:a)?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(0*\.\d+)\s*)?\)/;
+				rrgb		= /rgb(?:a)?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(0*\.?\d+)\s*)?\)/,
+				rrgbpercent	= /rgb(?:a)?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(0*\.?\d+)\s*)?\)/,
+				rhsl		= /hsl(?:a)?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(0*\.?\d+)\s*)?\)/;
 
 			// Handle color: #rrggbb
 			if (result = rhex.exec(input)) {
 				color = {
-					r: parseInt(result[1], 16),
-					g: parseInt(result[2], 16),
-					b: parseInt(result[3], 16)
+					r:		parseInt(result[1], 16),
+					g:		parseInt(result[2], 16),
+					b:		parseInt(result[3], 16),
+					source:	result[0]
 				};
 			}
 			// Handle color: #rgb
 			else if (result = rhexshort.exec(input)) {
 				color = {
-					r: parseInt(result[1]+result[1], 16),
-					g: parseInt(result[2]+result[2], 16),
-					b: parseInt(result[3]+result[3], 16),
-					source: result[0]
+					r:		parseInt(result[1]+result[1], 16),
+					g:		parseInt(result[2]+result[2], 16),
+					b:		parseInt(result[3]+result[3], 16),
+					source:	result[0]
 				};
 			}
 			// Handle color: rgb[a](r, g, b [, a])
@@ -186,7 +187,7 @@
 					g:		parseInt(result[2], 10),
 					b:		parseInt(result[3], 10),
 					alpha:	parseFloat(result[4], 10),
-					source: result[0]
+					source:	result[0]
 				};
 			}
 			// Handle color: rgb[a](r%, g%, b% [, a])
@@ -196,7 +197,7 @@
 					g:		parseFloat(result[2], 10) * 2.55,
 					b:		parseFloat(result[3], 10) * 2.55,
 					alpha:	parseFloat(result[4], 10),
-					source: result[0]
+					source:	result[0]
 				};
 			}
 			// Handle color: hsl[a](h%, s%, l% [, a])
@@ -216,17 +217,26 @@
 					name = result[i];
 					
 					if (colornames[name]) {
-						color = colornames[name];
-						color.source = name;
 						break;
 					}
 				}
+				
+				if (!colornames[name]) {
+					name = 'transparent';
+				}
+				
+				color = colornames[name];
+				color.source = name;
 			}
-
+			
+			if (!color.alpha && color.alpha !== 0) {
+				delete color.alpha;
+			}
+			
 			return color;
 		},
 		
-		hsl_to_rgb: function(h, s, l) {
+		hsl_to_rgb: function(h, s, l, a) {
 			var r, g, b, m1, m2;
 
 			if (s === 0) {
@@ -244,7 +254,7 @@
 				b = 255 * $.color.hue_to_rgb(m1, m2, h - (1/3));
 			}
 
-			return { r:r, g:g, b:b };
+			return { r:r, g:g, b:b, alpha:a };
 		},
 		
 		hue_to_rgb: function(m1, m2, h) {
@@ -261,15 +271,26 @@
 	if ($.cssHooks) {
 		$.each(props, function(i, hook) {
 			$.fx.step[hook] = function(fx) {
+				var val;
+				
 				if (!fx.start) {
-					fx.start = $.color.normalize($.css(fx.elem, hook));
+					fx.start = $.color.normalize($.style(fx.elem, hook) || $.css(fx.elem, hook));
 					fx.end = $.color.normalize(fx.end);
+					
+					if (!fx.start.alpha) {
+						fx.start.alpha = 1;
+					}
+					
+					if (!fx.end.alpha) {
+						fx.end.alpha = 1;
+					}
 				}
 				
-				$.style(fx.elem, hook, 'rgb('
+				$.style(fx.elem, hook, 'rgba('
 					+ parseInt(fx.start.r + (fx.pos * (fx.end.r - fx.start.r)), 10) + ','
 					+ parseInt(fx.start.g + (fx.pos * (fx.end.g - fx.start.g)), 10) + ','
-					+ parseInt(fx.start.b + (fx.pos * (fx.end.b - fx.start.b)), 10) + ')'
+					+ parseInt(fx.start.b + (fx.pos * (fx.end.b - fx.start.b)), 10) + ','
+					+ parseFloat(fx.start.alpha + (fx.pos * (fx.end.alpha - fx.start.alpha))) + ')'
 				);
 			};
 		});
