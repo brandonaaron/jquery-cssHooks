@@ -150,7 +150,7 @@
 			transparent: { r:-1, g:-1, b:-1 }
 		},
 		// Not a complete list yet...
-		props = 'backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor borderColor color outlineColor textShadowColor'.split(' ');
+		props = 'backgroundColor borderBottomColor borderLeftColor borderRightColor borderTopColor borderColor boxShadowColor color outlineColor textShadowColor'.split(' ');
 
 	$.color = {
 		normalize: function(input) {
