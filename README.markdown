@@ -9,8 +9,10 @@ Current Hooks:
  * borderRadius, borderRadiusTopLeft, borderRadiusTopRight, borderRadiusBottomRight, borderRadiusBottomLeft
  * boxShadow, boxShadowColor, boxShadowBlur, boxShadowSpread, boxShadowX, boxShadowY
  * borderImage
- * Alternative Border Radius Plugin with support for IE 6,7 8
+ * Alternative Border Radius Plugin with support for IE 6, 7, and 8
  * boxReflect
+ * textShadow, and textShadowColor, textShadowX, textShadowY, and textShadowBlur
+ * color animations for backgroundColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopColor, borderColor, boxShadowColor, color, outlineColor, and textShadowColor
 
 # Usage
 
@@ -39,4 +41,4 @@ jQuery 1.4.3 introduced the concept of cssHooks. They allow you to hook directly
 
 The cssHooks plugin is licensed under the MIT License (LICENSE.txt).
 
-Copyright (c) 2010 [Brandon Aaron](http://brandonaaron.net), [Burin Asavesna](http://helloburin.com) and [Tom Ellis](http://www.webmuse.co.uk)
+Copyright (c) 2010 [Brandon Aaron](http://brandonaaron.net), [Burin Asavesna](http://helloburin.com), [Tom Ellis](http://www.webmuse.co.uk), and [Phil Dokas](http://jetless.org)
