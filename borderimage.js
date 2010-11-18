@@ -3,6 +3,13 @@
 */
 (function($) {
     // Border Image set and get hooks
+    
+    
+    if( !$.cssHooks )
+    {
+    	$.error( "jQuery 1.4.3+ is needed for this plugin to work" );
+    }
+    
 	var div = document.createElement( "div" );
 	
     $.support.borderImage =
@@ -11,7 +18,7 @@
     (div.style.borderImage === '' ? 'borderImage' : false));
 
 	
-    if ( $.support.borderImage && $.support.borderImage !== "borderImage" && $.cssHooks )
+    if ( $.support.borderImage && $.support.borderImage !== "borderImage" )
     {
         $.cssHooks.borderImage = {
         
