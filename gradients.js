@@ -4,9 +4,14 @@
 (function($) {
     // Linear and Radial Gradients get hooks
     
-    //Need to check when setting background gradient or other such images
+    if( !$.cssHooks )
+    {
+    	$.error( "jQuery 1.4.3+ is needed for this plugin to work" );
+    	return;
+    }
     
     /*
+    * Need to check when setting background gradient or other such images
     background - fails to return a value
     background-image
     border-image
@@ -14,19 +19,22 @@
     content property - doesn't work through jQuery / JavaScript
     */
     
-	//Todo: improve regex reuse / logic
+	//Improved regex reuse and logic
 	var rWhitespace = /\s/,
 	rWhiteGlobal = /\s/g,
 	rRgba = /\,rgb/gi,
-	rContainRgba = /rgb(a?)/i;
+	rHsla = /\,hsl/gi,
 	sRgbaReplace = "|rgb",
-	prefix = "Moz Webkit ".split(rWhitespace),
+	sHslaReplace = "|hsl",
+	rContainRgborHsl = /(rgb|hsl)(a?)(\()/i,
+	//prefix = "Moz Webkit ".split(rWhitespace),
 	cssProps1 = "background backgroundImage listStyleImage";
 	
 	
 	/*
-	Need to do tests for border support
-	Currently Moz doesn't support gradient as border images
+	* Need to do tests for border support
+	* Currently Moz doesn't support gradient as border images
+	* Need to test in other browers too.
 	//Border
 	var cssProps2 = "border borderStyle borderCornerImage borderImage borderTopImage borderRightImage borderBottomImage borderLeftImage "+
 	"borderTopLeftImage borderTopRightImage borderBottomLeftImage borderBottomRightImage";
@@ -35,7 +43,6 @@
 	"borderTopLeftImage borderTopRightImage borderBottomLeftImage borderBottomRightImage";
     
 	var cssProps = (cssProps1 + " " + cssProps2).split(/\s/);
-	
 	*/
 	
 	var cssProps = cssProps1.split(rWhitespace);
@@ -146,7 +153,7 @@
     	//alert( value );
     
         var parts = /^(.*)(:?linear-gradient|linearGradient)(\()(.*)(\))(.*)$/i.exec( value );
-        var details = [], colourFrom, colourTo, position, percentage, isRgb = false;
+        var details = [], colourFrom, colourTo, position, percentage, isRgb = false, isHsl = false;
          
 		//part[1] & [6] = other settings	
         //parts[2] = gradient name;
@@ -159,15 +166,29 @@
         
         
         //rgb/rgba colours
-        if ( containsRGB( parts[4] ) )
+        /*if ( containsRGB( parts[4] ) )
         {
         	details = parseRGB( parts[4] );
-        	isRgb = true;
+        	isRgb = true; //not sure if needed
+        }
+        else if ( containsHSL( parts[4] )  )
+        {
+        	//alert( parts[4] );
+        	details = parseHSL( parts[4] );
+        	isHsl = true; //not sure if needed
+        }*/
+        
+        if( containsRGBorHSL( parts[4] ) )
+        {
+        	//alert("yeah");
+        	details = parseRGBandHSL( parts[4] );
         }
         else
         {
         	details = $.trim(parts[4]).split(",");
         }
+        
+        //alert( details );
         
         //Only colours passed
         if ( details.length === 2 )
@@ -184,7 +205,7 @@
 
                 value =  parts[1] + template + " " + parts[6];
             }
-            
+            //alert( value );
             return value;
         }
         //alert( "here" );
@@ -201,6 +222,8 @@
         //colourTo
         var otherColours = [];
         colourTo = "";
+        
+        
         
         var a = 1;
         for ( var i = 2; i < details.length; i++ )
@@ -239,7 +262,7 @@
            // alert( pos2 );
             template = template.replace( "{position}", pos2 );
             
-            alert( template );
+            //alert( template );
             
             value =  parts[1] + template + " " + parts[6];
             
@@ -266,6 +289,8 @@
         //alert( value );
         
         details = $.trim(parts[4]).split(",");
+        
+        
         
         //Only colours passed
         if ( details.length === 2 )
@@ -336,26 +361,22 @@
 		
         return value;  
     }
-    
-    function containsRGB( value )
+        
+    function parseRGBandHSL( value )
     {
-    	/*if ( $.trim( value ).indexOf("rgb") > -1 || $.trim( value ).indexOf("rgba") > -1 )
-    	{
-    		return true;
-    	}
     	
-    	return false;*/
-    	
-    	return ( rContainRgba.test(  $.trim( value ) ) );
+    	var newValue;
+    	//Hsl
+    	newValue = $.trim( value ).replace(rWhiteGlobal, "").replace(rHsla, sHslaReplace);
+    	//Rgb
+    	newValue = newValue.replace(rRgba, sRgbaReplace);
+
+    	return newValue.split("|");
     }
     
-    function parseRGB( value )
-    {
-    	//Parse each rgb/rgba value out
-    	var newValue;
-    	newValue = $.trim( value ).replace(rWhiteGlobal, "").replace(rRgba, sRgbaReplace).split("|");
-
-    	return newValue;
+    function containsRGBorHSL( value )
+    {   
+    	return ( rContainRgborHsl.test(  $.trim( value ) ) );
     }
     
     div = null;
