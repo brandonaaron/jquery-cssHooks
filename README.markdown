@@ -13,7 +13,7 @@ Current Hooks:
  * boxReflect
  * textShadow, and textShadowColor, textShadowX, textShadowY, and textShadowBlur
  * color animations for backgroundColor, borderBottomColor, borderLeftColor, borderRightColor, borderTopColor, borderColor, boxShadowColor, color, outlineColor, and textShadowColor
-
+ * columnCount, columnSpan, columnGap, columnWidth, columnRuleColor, columnRuleStyle, columnRuleWidth
 # Usage
 
 Super simple. Just request the margin, padding, backgroundPosition, boxShadow, etc like you would other CSS properties.
