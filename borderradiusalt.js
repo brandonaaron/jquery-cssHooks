@@ -3,6 +3,14 @@
 */
 (function($) {
     // Border Radius set and get hooks
+    
+    
+    if( !$.cssHooks )
+    {
+    	//If you get this error, you may not be using the correct version of jQuery
+    	$.error( "jQuery 1.4.3+ is needed for this plugin to work" );
+    	return;
+    }
 
 	var div = document.createElement("div"),
 	divStyle = div.style,
@@ -42,7 +50,7 @@
 	(divStyle.MozBorderRadius === ''? 'MozBorderRadiusBottomright' : 
 	(divStyle.borderRadius === ''? 'borderBottomRightRadius' : false));
 	
-	if ( $.support.borderRadius && $.support.borderRadius !== "borderRadius" && $.cssHooks ) //make it only work with 1.4.3+
+	if ( $.support.borderRadius && $.support.borderRadius !== "borderRadius" )
 	{		
 		//BorderRadius
 		$.cssHooks.borderRadius = {
@@ -65,33 +73,27 @@
 				};
 				
 				
-				//Not sure what is better to use
-                /*$.each(dirs, function( i, dir ) {
-					//alert(  $.support[dir] );
-                    elem.style[ $.support[dir] ] = values[ dir ];
-                });*/
-
 				elem.style[ $.support.borderRadius ] = value;
 			}
 		};
 		
-		$.each( dirs, function( i, radius ) {
+		$.each( dirs, function( i, dir ) {
 
-			$.cssHooks[ "border" + radius + "Radius"] = {
+			$.cssHooks[ "border" + dir + "Radius"] = {
 				get: function( elem, computed, extra ) {
 
-					return $.css( elem, $.support[radius] );
+					return $.css( elem, $.support[dir] );
 				},
 				set: function( elem, value ){
 
-					elem.style[ $.support[radius] ] = value;
+					elem.style[ $.support[dir] ] = value;
 				}
 			};
 			
 			
 			
-			$.fx.step[ "border" + radius + "Radius" ] = function( fx ) {
-				$.cssHooks[ "border" + radius + "Radius" ].set( fx.elem, fx.now + fx.unit );
+			$.fx.step[ "border" + dir + "Radius" ] = function( fx ) {
+				$.cssHooks[ "border" + dir + "Radius" ].set( fx.elem, fx.now + fx.unit );
 			};
 
 			
@@ -130,7 +132,8 @@
 				
 				css.cssText = "";
 				css.addRule( "#results", "border-radius:" + values.join(" ") );
-
+				//Needs to be the directory from root of index.html
+				//or page that uses this js file to the border radius htc file
 				elem.style.behavior = "url(js/border-radius.htc)";
 				
 				$.data(elem, "borderRadiusIE", values.join(" "));
@@ -141,15 +144,16 @@
 		};
 		
 		//Todo: Add support for each corner
-		$.each( dirs, function( i, radius ) {
+		$.each( dirs, function( i, dir ) {
 
-			$.cssHooks[ "border" + radius + "Radius"] = {
+			$.cssHooks[ "border" + dir + "Radius"] = {
 			
 				get: function( elem, computed, extra ) {
 
 				},
 				set: function( elem, value ){
-
+				
+					
 				}
 			};
 			
@@ -158,21 +162,22 @@
 		// setup fx hooks
 		$.fx.step.borderRadius = function( fx ) {
 		
-			//Todo: Doesn't seem to work correctly
+			//Todo: 
+			//Doesn't seem to work correctly, seems it does not animate
 			$(fx.elem).css("border-radius", fx.now + fx.unit);
 			//$.cssHooks.borderRadius.set( fx.elem, fx.now + fx.unit );
 		};
 		
 		
-		$.fx.step[ "border" + radius + "Radius" ] = function( fx ) {
+		//$.fx.step[ "border" + radius + "Radius" ] = function( fx ) {
 			//Todo: Add support for animation
 			//$.cssHooks[ "border" + radius + "Radius" ].set( fx.elem, fx.now + fx.unit );
-		};
+		//};
 		
 		
 		
 	}
 
-	div = divStyle = null;
+	div = null;
 	
 })(jQuery);
