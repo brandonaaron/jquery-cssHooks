@@ -71,7 +71,7 @@
     var webkitradial = "-webkit-gradient(radial, {position} {colours} )";
     var moz          = "-moz-linear-gradient( {position} {colours} )";
     
-    
+    var el = null;
     
     //Normalises between Moz/W3c and Webkit
     //Moz/W3c uses shorter position, Webkit uses longer position
@@ -95,8 +95,9 @@
     
     var posRadial = {
     
-        "center" : "center center, 0, center center, 100",
-		"farthest-side" : "60%"
+        "center" : "center center, 0, center center",
+		"farthest-side" : "60%",
+		"standard" : "center center, 0, center center"
     };
     
 
@@ -110,7 +111,7 @@
     }
     
 	
-    if ( $.support.linearGradient && $.support.linearGradient !== "gradient" )
+    if ( $.support.linearGradient && $.support.linearGradient !== "linear-gradient" )
     {
 				
 		$.each( cssProps, function( i, prop ){
@@ -128,12 +129,13 @@
 					if( /^(.*)(:?linear-gradient|linearGradient)(.*)$/i.test( value ) )
 					{
 						//TODO: need to check for mulitple backgrounds
-						//alert( linearSettings( value ) );
 						elem.style[prop] = linearSettings( value );
 					}
 					else if ( /(^|\s)(:?radial-gradient|radialGradient)(.*)$/i.test( value ) )
 					{
 						//TODO: need to check for mulitple backgrounds
+						//alert( value );
+						el = elem;
 						elem.style[prop] = radialSettings( value );
 					}
 					else
@@ -162,8 +164,7 @@
         
         //Replaces linear-gradient with browser specific gradient e.g. -moz-linear-gradient
         value = value.replace( parts[2] , $.support.linearGradient );
-        //alert( value );
-        
+
         
         //rgb/rgba colours
         /*if ( containsRGB( parts[4] ) )
@@ -187,9 +188,7 @@
         {
         	details = $.trim(parts[4]).split(",");
         }
-        
-        //alert( details );
-        
+
         //Only colours passed
         if ( details.length === 2 )
         {
@@ -205,10 +204,9 @@
 
                 value =  parts[1] + template + " " + parts[6];
             }
-            //alert( value );
+
             return value;
         }
-        //alert( "here" );
                 
         //Position and 2 ( or more ) Colours set
         position = details[0];
@@ -224,52 +222,47 @@
         colourTo = "";
         
         
-        
         var a = 1;
         for ( var i = 2; i < details.length; i++ )
         {
             details[i] = $.trim( details[i] );
             
-            percentage = (details[i].split(rWhitespace).length !== 1) ? parseInt(details[i].split(rWhitespace)[1])/100 : Math.round( 100 / (details.length - 2) ) / 100;
+            percentage = 0;
             
-            percentage = ( i == ( details.length - 1 ) ) ? "100" : ( percentage * a );
-            
+            if( containsRGBorHSL( details[i] ) )
+            {
+            	percentage = ( i == ( details.length - 1 ) ) ? "100" : ( 100 / i );
+            }
+            else
+            {
+            	percentage = (details[i].split(rWhitespace).length !== 1) ? parseInt(details[i].split(rWhitespace)[1])/100 : Math.round( 100 / (details.length - 2) ) / 100;
+            	percentage = ( i == ( details.length - 1 ) ) ? "100" : ( percentage * a );
+            }
             otherColours.push ("color-stop(" + percentage + "%, " + details[i].split(rWhitespace)[0] + ")" );
             a++;
         }
         
-        //alert("1");
         
         colourTo = otherColours.join(", ");
         
-        //alert( colourTo );
         
         //Change formatting of css
         //Don't need to do this for firefox as it is same as W3C Spec
         if ( $.support.isWebkit )
         {
-        	//alert("2");
         	//Need to Improve this logic
             var template = webkitlinear;
             template = template.replace( "{colours}", "," + colourFrom + "," + colourTo );
             
-            //alert( template );
             //template = template.replace( "{position}", position + ",  right bottom" );
             //var pos = pos[position] || position;
 
             var pos2 = posLinear[position] || position;
-
-           // alert( pos2 );
             template = template.replace( "{position}", pos2 );
             
-            //alert( template );
             
             value =  parts[1] + template + " " + parts[6];
-            
-           // alert("3");
         }
-		
-		//alert( value );
         return value;            
     }
     
@@ -286,12 +279,18 @@
         
         //Replaces linear-gradient with browser specific gradient e.g. -moz-linear-gradient
         value = value.replace( parts[2] , $.support.radialGradient );
-        //alert( value );
+
         
-        details = $.trim(parts[4]).split(",");
-        
-        
-        
+        if( containsRGBorHSL( parts[4] ) )
+        {
+        	//alert("yeah");
+        	details = parseRGBandHSL( parts[4] );
+        }
+        else
+        {
+        	details = $.trim(parts[4]).split(",");
+        }
+
         //Only colours passed
         if ( details.length === 2 )
         {
@@ -299,19 +298,22 @@
             if ( $.support.isWebkit )
             {
                 var template = webkitradial;
-                
-                var colours = parts[4].split(",");
-                
-                template = template.replace( "{colours}",  "center center, 0, center center, 100, from(" + colours[0] + "), to(" + colours[1] + ")" );
-                template = template.replace( "{position}", "" );
-                
+                                
                 //Put back together
                 value =  parts[1] + template + " " + parts[6];
-            }
+                
+                var width = $(el).width() * 0.8;
+                
+                template = template.replace( "{colours}",  posRadial['standard'] + "," + width + ", from(" + details[0] + "), to(" + details[1] + ")" );
+				template = template.replace( "{position}", "" );
+                
 
+                value =  parts[1] + template + " " + parts[6];
+                
+            }
             return value;
         }
-        /*        
+                
         //Position and 2 ( or more ) Colours set
         
         position = details[0];
@@ -331,11 +333,19 @@
         {
             details[i] = $.trim( details[i] );
             
-            percentage = (details[i].split(rWhitespace).length !== 1) ? parseInt(details[i].split(rWhitespace)[1])/100 : Math.round( 100 / (details.length - 2) ) / 100;
+            percentage = 0;
             
-            percentage = ( i == ( details.length - 1 ) ) ? "100" : ( percentage * a );
+            if( containsRGBorHSL( details[i] ) )
+            {
+            	percentage = ( i == ( details.length - 1 ) ) ? "100" : ( 100 / i );
+            }
+            else
+            {
+            	percentage = (details[i].split(rWhitespace).length !== 1) ? parseInt(details[i].split(rWhitespace)[1])/100 : Math.round( 100 / (details.length - 2) ) / 100;
+            	percentage = ( i == ( details.length - 1 ) ) ? "100" : ( percentage * a );
+            }
             
-            otherColours.push ("color-stop(" + percentage + ", " + details[i].split(rWhitespace)[0] + ")" );
+            otherColours.push ("color-stop(" + percentage + "%, " + details[i].split(rWhitespace)[0] + ")" );
             a++;
         }
         
@@ -347,18 +357,19 @@
         if ( $.support.isWebkit )
         {
         	//Need to Improve this logic
-            var template = webkitlinear;
+            var template = webkitradial;
             template = template.replace( "{colours}", "," + colourFrom + "," + colourTo );
             //template = template.replace( "{position}", position + ",  right bottom" );
             //var pos = pos[position] || position;
-            var pos2 = pos[position] || position;
-            template = template.replace( "{position}", pos2 );
+            var pos2 = posRadial[position] || position;
+            
+            var width = $(el).width() * 0.8;
+            
+            template = template.replace( "{position}", pos2 + "," + width);
             
             value =  parts[1] + template + " " + parts[6];
         }
-        */
-		
-		
+
         return value;  
     }
         
