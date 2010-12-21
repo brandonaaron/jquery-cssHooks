@@ -68,11 +68,16 @@ $.cssHooks.scale = {
     return transform && transform.scale? transform.scale : 0;
   }
 };
+
 $.fx.step.scale = function( fx ) {
-  var 
-    // fx.start is not safe
-    start = $.data( fx.elem, 'transform').scale,
+  // fx.start is not correctly initialised by jQuery, fix it once for all
+  if ( !$.isArray(fx.start) ) {
+    fx.start = $.data( fx.elem, 'transform').scale;
+  }
+
+  var start = fx.start,
     end = fx.end.toString().split(',');
+
   // In case of composit value, we need to recalculate fx.now
   if (start.length == 2 || end.length == 2) {
     if (!start[1]) {

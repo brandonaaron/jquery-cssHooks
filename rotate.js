@@ -80,9 +80,9 @@ function radToDeg( rad ) {
   return rad * 180 / Math.PI;
 }
 function toRadian(value) {
-  if(value.indexOf("deg") != -1) {
+  if( ~value.indexOf("deg") ) {
     return parseInt(value,10) * (Math.PI * 2 / 360);
-  } else if (value.indexOf("grad") != -1) {
+  } else if ( ~value.indexOf("grad") ) {
     return parseInt(value,10) * (Math.PI/200);
   }
   return parseFloat(value);
