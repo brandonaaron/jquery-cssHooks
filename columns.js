@@ -2,8 +2,13 @@
 * Licensed under the MIT License (license.txt).
 */
 (function($) {
-    // Multiple Columns get hooks
+    // Multiple Columns set and get hooks
 
+    if( !$.cssHooks )
+    {
+    	$.error( "jQuery 1.4.3+ is needed for this plugin to work" );
+    }
+    
     var div = document.createElement("div");
 
     var rWhitespace = /\s/,
@@ -19,7 +24,7 @@
     
     function getCssProperty( prefix, prop )
     {
-    	return prefix + ( (prefix === '') ? column.toLowerCase() : column ) + prop
+    	return prefix + ( (prefix === '') ? column.toLowerCase() : column ) + prop;
     }
 
     if ( $.support.columnCount && $.support.columnCount !== "columnCount" )
@@ -37,7 +42,6 @@
             };
            
         });
-
 
     }
    
