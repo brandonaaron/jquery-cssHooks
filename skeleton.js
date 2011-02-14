@@ -76,7 +76,17 @@ if ( supportProperty && supportProperty != propertyName ) {
 // populate jQuery.cssHooks with the appropriate hook
 $.cssHooks[propertyName] = propertyHook;
 
+// animation for simple values
 $.fx.step[propertyName] = function( fx ) {
+	var value = fx.now + fx.unit;
+	supportProperty ?
+		// skip one useless function call if the value doesn't need extra processing
+		fx.elem[supportProperty] = value:
+		// use the hook otherwise
+		propertyHook.set( fx.elem, value );
+}
+// The following code can be used as a base to animate more complex values
+/*$.fx.step[propertyName] = function( fx ) {
 	// fx.start and fx.end will probably be parsed on the first step to be computable
 	if ( !fx.start || typeof fx.start === 'string' ) {
 		// fix fx.start value
@@ -95,6 +105,6 @@ $.fx.step[propertyName] = function( fx ) {
 	supportProperty ?
 		fx.elem[supportProperty] = value:
 		propertyHook.set( fx.elem, value );
-}
+}*/
 
 })( jQuery );
