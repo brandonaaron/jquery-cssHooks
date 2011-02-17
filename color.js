@@ -285,14 +285,18 @@
 			$.fx.step[hook] = function(fx) {
 				var val;
 				
-				if (!fx.start) {
-					fx.start = $.color.normalize($.style(fx.elem, hook) || $.css(fx.elem, hook));
+				if ( !fx.start || typeof fx.start === 'string' ) {
+					if ( !fx.start ) {
+						fx.start = $.css(fx.elem, hook);
+					}
+
+					fx.start = $.color.normalize(fx.start);
 					fx.end = $.color.normalize(fx.end);
-					
+
 					if (!fx.start.alpha) {
 						fx.start.alpha = 1;
 					}
-					
+
 					if (!fx.end.alpha) {
 						fx.end.alpha = 1;
 					}
