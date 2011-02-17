@@ -52,11 +52,10 @@ $.cssNumber[propertyName] = true;
 if ( supportProperty && supportProperty != propertyName ) {
 	propertyHook = {
 		get: function( elem, computed, extra ) {
-			return (computed ?
+			return computed ?
 				// the availability of getComputedStyle can be infered from the CSS3 feature test
-				getComputedStyle(elem):
-				elem.style
-			)[ supportProperty ];
+				getComputedStyle(elem).getPropertyValue( supportProperty ):
+				elem.style[ supportProperty ];
 		},
 		set: function( elem, value ) {
 			elem[supportProperty] = value;
