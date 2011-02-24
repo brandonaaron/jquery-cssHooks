@@ -16,11 +16,11 @@ var div = document.createElement('div'),
 	propertyName = '<property name>',
 	suffix = propertyName[0].toUpperCase() + propertyName.slice(1),
 	testProperties = [
-		'Moz' + suffix,
-		'Webkit' + suffix,
-		'0' + suffix,
+		'O' + suffix,
 		// 'ms', not 'Ms'
 		'ms' + suffix,
+		'Webkit' + suffix,
+		'Moz' + suffix,
 		// prefix-less property
 		propertyName
 	],
@@ -33,7 +33,7 @@ var div = document.createElement('div'),
 
 // test different vendor prefixes of this property
 while ( i-- ) {
-	if ( divStyle[ testProperties[i] ] === '' ) {
+	if ( testProperties[i] in divStyle ) {
 		$.support[propertyName] = supportProperty = testProperties[i];
 		continue;
 	}
