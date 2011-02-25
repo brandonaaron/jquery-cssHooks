@@ -50,18 +50,29 @@ $.cssNumber[propertyName] = true;
 
 // prefix-less property will likely not need a hook
 if ( supportProperty && supportProperty != propertyName ) {
-	propertyHook = {
-		get: function( elem, computed, extra ) {
-			return computed ?
-				// the availability of getComputedStyle can be infered from the CSS3 feature test
-				getComputedStyle(elem).getPropertyValue( supportProperty ):
-				elem.style[ supportProperty ];
-		},
-		set: function( elem, value ) {
-			elem[supportProperty] = value;
+	// Modern browsers can use jQuery.cssProps as a basic hook
+	$.cssProps[propertyName] = supportProperty;
+
+	// Real cssHooks might be used to normalize implementations inconsistencies in some browsers
+	// for example
+	if ( supportProperty == 'Moz' + suffix ) {
+		propertyHook = {
+			set: function( elem, value ) {
+				elem.style[ supportProperty ] = normalizeFirefoxSet( value );
+			}
+		};
+	// getter always needs to be fixed for IE9, see http://jqbug.com/8346
+	} else if ( supportProperty == 'ms' + suffix ) {
+		propertyHook = {
+			get: function( elem, computed ) {
+				return (computed ?
+					$.css( elem, 'Ms' + suffix ):
+					elem.style[supportProperty]
+				)
+			}
 		}
-	};
-// If a proprietary alternative exists for IE678, implement a special hook for it
+	}
+// If a proprietary alternative exists for IE678, implement a complete cssHooks for it
 } else if ( supportMsAlternative ) {
 	propertyHook = {
 		get: function( elem, computed, extra ) {
@@ -72,17 +83,24 @@ if ( supportProperty && supportProperty != propertyName ) {
 		}
 	}
 }
-// populate jQuery.cssHooks with the appropriate hook
-$.cssHooks[propertyName] = propertyHook;
+// populate jQuery.cssHooks with the appropriate hook if necessary
+if ( propertyHook ) {
+	$.cssHooks[propertyName] = propertyHook;
+
+// uncomment following block if the animation logic uses the getter
+}/* else {
+	propertyHook = {};
+}
+propertyHook.get = propertyHook.get || $.css;*/
 
 // animation for simple values
 $.fx.step[propertyName] = function( fx ) {
 	var value = fx.now + fx.unit;
-	supportProperty ?
-		// skip one useless function call if the value doesn't need extra processing
-		fx.elem[supportProperty] = value:
-		// use the hook otherwise
-		propertyHook.set( fx.elem, value );
+	propertyHook.set?
+		// Use a getter hook if it exists
+		propertyHook.set( elem, transform ):
+		// Otherwise modify row DOM for maximum performances
+		elem.style[supportProperty] = transform;
 }
 // The following code can be used as a base to animate more complex values
 /*$.fx.step[propertyName] = function( fx ) {
@@ -90,7 +108,7 @@ $.fx.step[propertyName] = function( fx ) {
 	if ( !fx.start || typeof fx.start === 'string' ) {
 		// fix fx.start value
 		if ( !fx.start ) {
-			fx.start =  propertyHook.get( fx.elem, true );
+			fx.start =  propertyHook.get( fx.elem, supportProperty );
 		}
 		fx.start = parse(fx.start);
 		fx.end = parse(fx.end);
@@ -101,9 +119,9 @@ $.fx.step[propertyName] = function( fx ) {
 	var value = fx.start + ( fx.end - fx.start ) * fx.pos;
 
 	// set the value once it has been calculated
-	supportProperty ?
-		fx.elem[supportProperty] = value:
-		propertyHook.set( fx.elem, value );
+	propertyHook.set?
+		propertyHook.set( elem, transform ):
+		elem.style[supportProperty] = transform;
 }*/
 
 })( jQuery );
