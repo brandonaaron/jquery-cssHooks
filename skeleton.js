@@ -13,8 +13,8 @@
 
 var div = document.createElement('div'),
 	divStyle = div.style,
-	propertyName = '<property name>',
-	suffix = propertyName[0].toUpperCase() + propertyName.slice(1),
+	propertyName = '<propertyName>',
+	suffix = '<PropertyName>', // with leading upper-case
 	testProperties = [
 		'O' + suffix,
 		// 'ms', not 'Ms'
@@ -72,7 +72,7 @@ if ( supportProperty && supportProperty != propertyName ) {
 			}
 		}
 	}
-// If a proprietary alternative exists for IE678, implement a complete cssHooks for it
+// If a proprietary alternative exists for IE678, implement a complete hook for it
 } else if ( supportMsAlternative ) {
 	propertyHook = {
 		get: function( elem, computed, extra ) {
