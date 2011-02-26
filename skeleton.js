@@ -14,7 +14,8 @@
 var div = document.createElement('div'),
 	divStyle = div.style,
 	propertyName = '<propertyName>',
-	suffix = '<PropertyName>', // with leading upper-case
+	// with leading upper-case
+	suffix = '<PropertyName>',
 	testProperties = [
 		'O' + suffix,
 		// 'ms', not 'Ms'
@@ -99,7 +100,7 @@ $.fx.step[propertyName] = function( fx ) {
 	propertyHook.set?
 		// Use a getter hook if it exists
 		propertyHook.set( elem, transform ):
-		// Otherwise modify row DOM for maximum performances
+		// Otherwise modify raw DOM for maximum performances
 		elem.style[supportProperty] = transform;
 }
 // The following code can be used as a base to animate more complex values
