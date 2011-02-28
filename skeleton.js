@@ -62,12 +62,15 @@ if ( supportProperty && supportProperty != propertyName ) {
 				elem.style[ supportProperty ] = normalizeFirefoxSet( value );
 			}
 		};
-	// getter always needs to be fixed for IE9, see http://jqbug.com/8346
-	} else if ( supportProperty == 'ms' + suffix ) {
+	/* Fix two jQuery bugs still present in 1.5.1
+	 * - rupper is incompatible with IE9, see http://jqbug.com/8346
+	 * - jQuery.css is not really jQuery.cssProps aware, see http://jqbug.com/8402
+	 */
+	} else {
 		propertyHook = {
 			get: function( elem, computed ) {
 				return (computed ?
-					$.css( elem, 'Ms' + suffix ):
+					$.css( elem, supportProperty.replace(/^ms/, 'Ms') ):
 					elem.style[supportProperty]
 				)
 			}
@@ -87,17 +90,14 @@ if ( supportProperty && supportProperty != propertyName ) {
 // populate jQuery.cssHooks with the appropriate hook if necessary
 if ( propertyHook ) {
 	$.cssHooks[propertyName] = propertyHook;
-
-// uncomment following block if the animation logic uses the getter
-}/* else {
-	propertyHook = {};
 }
-propertyHook.get = propertyHook.get || $.css;*/
+// uncomment following line if the animation logic uses the getter
+//var propertyGet = propertyHook && propertyHook.get || $.css;*/
 
 // animation for simple values
 $.fx.step[propertyName] = function( fx ) {
 	var value = fx.now + fx.unit;
-	propertyHook.set?
+	propertyHook && propertyHook.set?
 		// Use a getter hook if it exists
 		propertyHook.set( elem, transform ):
 		// Otherwise modify raw DOM for maximum performances
@@ -109,7 +109,7 @@ $.fx.step[propertyName] = function( fx ) {
 	if ( !fx.start || typeof fx.start === 'string' ) {
 		// fix fx.start value
 		if ( !fx.start ) {
-			fx.start =  propertyHook.get( fx.elem, supportProperty );
+			fx.start =  propertyGet( fx.elem, supportProperty );
 		}
 		fx.start = parse(fx.start);
 		fx.end = parse(fx.end);
