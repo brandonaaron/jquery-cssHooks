@@ -24,7 +24,7 @@
 var div = document.createElement('div'),
 	divStyle = div.style,
 	propertyName = 'transform',
-	suffix = propertyName[0].toUpperCase() + propertyName.slice(1),
+	suffix = 'Transform',
 	testProperties = [
 		'O' + suffix,
 		'ms' + suffix,
@@ -36,7 +36,9 @@ var div = document.createElement('div'),
 	i = testProperties.length,
 	supportProperty,
 	supportMatrixFilter,
-	propertyHook;
+	propertyHook,
+	propertyGet,
+	rMatrix = /Matrix([^)]*)/;
 
 // test different vendor prefixes of this property
 while ( i-- ) {
@@ -58,7 +60,7 @@ $.cssNumber[propertyName] = true;
 /*
  * fn.css() hooks
  */
-if ( supportProperty ) {
+if ( supportProperty && supportProperty != propertyName ) {
 	// Modern browsers can use jQuery.cssProps as a basic hook
 	$.cssProps[propertyName] = supportProperty;
 	
@@ -79,12 +81,15 @@ if ( supportProperty ) {
 					value;
 			}
 		}
-	// rupper is not yet fixed in jQuery 1.5.1 for IE9, see http://jqbug.com/8346
-	} else if ( supportProperty == 'ms' + suffix ) {
+	/* Fix two jQuery bugs still present in 1.5.1
+	 * - rupper is incompatible with IE9, see http://jqbug.com/8346
+	 * - jQuery.css is not really jQuery.cssProps aware, see http://jqbug.com/8402
+	 */
+	} else {
 		propertyHook = {
 			get: function( elem, computed ) {
 				return (computed ?
-					$.css( elem, 'MsTransform' ):
+					$.css( elem, supportProperty.replace(/^ms/, 'Ms') ):
 					elem.style[supportProperty]
 				)
 			}
@@ -103,10 +108,10 @@ if ( supportProperty ) {
 } else if ( supportMatrixFilter ) {
 	propertyHook = {
 		get: function( elem, computed ) {
-			var elemStyle = elem.style,
+			var elemStyle = ( computed && elem.currentStyle ? elem.currentStyle : elem.style ),
 				matrix;
 
-			if ( elemStyle && /Matrix([^)]*)/.test( elemStyle.filter ) ) {
+			if ( elemStyle && rMatrix.test( elemStyle.filter ) ) {
 				matrix = RegExp.$1.split(',');
 				matrix = [
 					matrix[0].split('=')[1],
@@ -121,37 +126,56 @@ if ( supportProperty ) {
 			matrix[5] = elemStyle ? elemStyle.top : 0;
 			return "matrix(" + matrix + ")";
 		},
-		set: function( elem, value ) {
-			value = matrix(value);
-			elem.style.filter = [
-				"progid:DXImageTransform.Microsoft.Matrix(",
-					"M11="+value[0]+",",
-					"M12="+value[2]+",",
-					"M21="+value[1]+",",
-					"M22="+value[3]+",",
-					"SizingMethod='auto expand'",
-				")"
-			].join('');
-			// From pbakaus's Transformie http://github.com/pbakaus/transformie
-			if ( centerOrigin = $.transform.centerOrigin ) {
-				elem.style[centerOrigin == 'margin' ? 'marginLeft' : 'left'] = -(elem.offsetWidth/2) + (elem.clientWidth/2) + 'px';
-				elem.style[centerOrigin == 'margin' ? 'marginTop' : 'top'] = -(elem.offsetHeight/2) + (elem.clientHeight/2) + 'px';
+		set: function( elem, value, animate ) {
+			var elemStyle = elem.style,
+				currentStyle,
+				Matrix,
+				filter;
+
+			if ( !animate ) {
+				elemStyle.zoom = 1;
 			}
-			// We assume that the elements are absolute positionned inside a relative positionned wrapper
-			elem.style.left = value[4] + 'px';
-			elem.style.top = value[5] + 'px';
+
+			value = matrix(value);
+
+			// rotate, scale and skew
+			if ( !animate || animate.M ) {
+				Matrix = [
+					"Matrix("+
+						"M11="+value[0],
+						"M12="+value[2],
+						"M21="+value[1],
+						"M22="+value[3],
+						"SizingMethod='auto expand'"
+				].join();
+				filter = ( currentStyle = elem.currentStyle ) && currentStyle.filter || elemStyle.filter || "";
+
+				elemStyle.filter = rMatrix.test(filter) ?
+					filter.replace(rMatrix, Matrix) :
+					filter + " progid:DXImageTransform.Microsoft." + Matrix + ")";
+
+				// center the transform origin, from pbakaus's Transformie http://github.com/pbakaus/transformie
+				if ( (centerOrigin = $.transform.centerOrigin) ) {
+					elemStyle[centerOrigin == 'margin' ? 'marginLeft' : 'left'] = -(elem.offsetWidth/2) + (elem.clientWidth/2) + 'px';
+					elemStyle[centerOrigin == 'margin' ? 'marginTop' : 'top'] = -(elem.offsetHeight/2) + (elem.clientHeight/2) + 'px';
+				}
+			}
+
+			// translate
+			if ( !animate || animate.T ) {
+				// We assume that the elements are absolute positionned inside a relative positionned wrapper
+				elemStyle.left = value[4] + 'px';
+				elemStyle.top = value[5] + 'px';
+			}
 		}
 	}
 }
 // populate jQuery.cssHooks with the appropriate hook if necessary
 if ( propertyHook ) {
 	$.cssHooks[propertyName] = propertyHook;
-
-// we need a unique setter for the animation logic
-} else {
-	propertyHook = {};
 }
-propertyHook.get = propertyHook.get || $.css;
+// we need a unique setter for the animation logic
+propertyGet = propertyHook && propertyHook.get || $.css;
 
 /*
  * fn.animate() hooks
@@ -160,16 +184,38 @@ $.fx.step.transform = function( fx ) {
 	var elem = fx.elem,
 		start = fx.start,
 		end = fx.end,
+		split,
 		pos = fx.pos,
-		transform = '',
+		transform,
+		translate,
+		rotate,
+		scale,
+		skew,
+		T = false,
+		M = false,
 		prop;
+	translate = rotate = scale = skew = '';
 
 	// fx.end and fx.start need to be converted to their translate/rotate/scale/skew components
 	// so that we can interpolate them
 	if ( !start || typeof start === "string" ) {
-		// $.fx.prototype.cur is still broken in 1.5, see #7912
+		// the following block can be commented out with jQuery 1.5.1+, see #7912
 		if (!start) {
-			start = propertyHook.get( elem, supportProperty );
+			start = propertyGet( elem, supportProperty );
+		}
+
+		// force layout only once per animation
+		if ( supportMatrixFilter ) {
+			elem.style.zoom = 1;
+		}
+
+		// if the start computed matrix is in end, we are doing a relative animation
+		split = end.split(start);
+		if ( split.length == 2 ) {
+			// remove the start computed matrix to make animations more accurate
+			end = split.join('');
+			fx.origin = start;
+			start = 'none';
 		}
 
 		// start is either 'none' or a matrix(...) that has to be parsed
@@ -208,28 +254,38 @@ $.fx.step.transform = function( fx ) {
 	 */
 	if ( start.translate ) {
 		// round translate to the closest pixel
-		transform += 'translate('+
+		translate = ' translate('+
 			((start.translate[0] + (end.translate[0] - start.translate[0]) * pos + .5) | 0) +'px,'+
 			((start.translate[1] + (end.translate[1] - start.translate[1]) * pos + .5) | 0) +'px'+
 		')';
+		T = true;
 	}
 	if ( start.rotate != undefined ) {
-		transform += ' rotate('+ (start.rotate + (end.rotate - start.rotate) * pos) +'rad)';
+		rotate = ' rotate('+ (start.rotate + (end.rotate - start.rotate) * pos) +'rad)';
+		M = true;
 	}
 	if ( start.scale ) {
-		transform += ' scale('+
+		scale = ' scale('+
 			(start.scale[0] + (end.scale[0] - start.scale[0]) * pos) +','+
 			(start.scale[1] + (end.scale[1] - start.scale[1]) * pos) +
 		')';
+		M = true;
 	}
 	if ( start.skew ) {
-		transform += ' skew('+
+		skew = ' skew('+
 			(start.skew[0] + (end.skew[0] - start.skew[0]) * pos) +'rad,'+
 			(start.skew[1] + (end.skew[1] - start.skew[1]) * pos) +'rad'+
 		')';
+		M = true;
 	}
-	propertyHook.set?
-		propertyHook.set( elem, transform ):
+
+	// In case of relative animation, restore the origin computed matrix here.
+	transform = fx.origin ?
+		fx.origin + translate + skew + scale + rotate:
+		translate + rotate + scale + skew;
+
+	propertyHook && propertyHook.set ?
+		propertyHook.set( elem, transform, {M: M, T: T} ):
 		elem.style[supportProperty] = transform;
 };
 
@@ -441,7 +497,7 @@ function components( transform ) {
     } else if (name == 'skew') {
       value = value.split(',');
       skew[0] += toRadian(value[0]);
-      skew[1] += toRadian(value[1] || 0);
+      skew[1] += toRadian(value[1] || '0');
     }
 	}
 
