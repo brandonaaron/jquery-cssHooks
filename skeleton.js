@@ -43,8 +43,6 @@ while ( i-- ) {
 if ( !supportProperty ) {
 	$.support.MsAlternative = supportMsAlternative = divStyle['<IE alternative>'] === '';
 }
-// prevent IE memory leak
-div = divStyle = null;
 
 // the following line should be removed if 'px' is the default unit for this property
 $.cssNumber[propertyName] = true;
