@@ -6,12 +6,12 @@
 (function($) {
     // Border Image set and get hooks
     
-	var div = document.createElement( "div" ),
-		divStyle = div.style,
-		$.support.borderImage =
-		div.style.MozBorderImage === '' ? 'MozBorderImage' :
-		(div.style.WebkitBorderImage === '' ? 'WebkitBorderImage' :
-		(div.style.borderImage === '' ? 'borderImage' : false));
+    var div = document.createElement( "div" ),
+    	divStyle = div.style,
+    	$.support.borderImage =
+    	div.style.MozBorderImage === '' ? 'MozBorderImage' :
+    	(div.style.WebkitBorderImage === '' ? 'WebkitBorderImage' :
+    	(div.style.borderImage === '' ? 'borderImage' : false));
 
     if ( $.support.borderImage && $.support.borderImage !== "borderImage" ){
         
