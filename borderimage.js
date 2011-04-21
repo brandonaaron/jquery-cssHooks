@@ -32,4 +32,4 @@
         
     div = divStyle = null;
     
-})(jQuery); 
+})(jQuery);
