@@ -27,7 +27,6 @@
             }
 			
         };
-		    
     }
         
     div = divStyle = null;
