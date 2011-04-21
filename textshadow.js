@@ -20,8 +20,6 @@
 						var shadow = $.css(elem, propStr),
 							color = $.color.normalize(shadow),
 							ret;
-							
-						console.log('getting', prop)
 
 						if (prop === colorStr) {
 							ret = 'rgb'
@@ -57,8 +55,6 @@
 			};
 			
 			if (suffix !== colorStr) {
-				$.cssNumber[hook] = true;
-				
 				$.fx.step[hook] = function(fx) {
 					$.cssHooks[hook].set(fx.elem, fx.now + fx.unit);
 				};
