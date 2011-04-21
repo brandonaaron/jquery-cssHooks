@@ -7,7 +7,7 @@
  * - transformOrigin is not accessible
  *
  * latest version and complete README available on Github:
- * https://github.com/lrbabe/jquery.transform.js
+ * https://github.com/louisremi/jquery.transform.js
  *
  * Copyright 2011 @louis_remi
  * Licensed under the MIT license.
@@ -85,7 +85,7 @@ if ( supportProperty && supportProperty != propertyName ) {
 	 * - rupper is incompatible with IE9, see http://jqbug.com/8346
 	 * - jQuery.css is not really jQuery.cssProps aware, see http://jqbug.com/8402
 	 */
-	} else {
+	} else if ( /^1\.[0-5](?:\.|$)/.test($.fn.jquery) ) {
 		propertyHook = {
 			get: function( elem, computed ) {
 				return (computed ?
@@ -148,7 +148,7 @@ if ( supportProperty && supportProperty != propertyName ) {
 						"M22="+value[3],
 						"SizingMethod='auto expand'"
 				].join();
-				filter = ( currentStyle = elem.currentStyle ) && currentStyle.filter || elemStyle.filter || "";
+				filter = ( currentStyle = elem.currentStyle ) && currentStyle.filter || elemStyle.filter || "";
 
 				elemStyle.filter = rMatrix.test(filter) ?
 					filter.replace(rMatrix, Matrix) :
