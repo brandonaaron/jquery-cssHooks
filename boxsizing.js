@@ -14,11 +14,8 @@
 		$.support.boxSizing =
 			divStyle.MozBoxSizing === ''? 'MozBoxSizing' : 
 			(divStyle.WebkitBoxSizing === ''? 'WebkitBoxSizing' : 
-			(divStyle.MsBoxSizing === ''? 'MsBoxSizing' :
-			(divStyle.OBoxSizing === ''? 'OBoxSizing' : 
-			(divStyle.ICabBoxSizing === ''? 'ICabBoxSizing' : 
-			(divStyle.KhtmlBoxSizing === ''? 'KhtmlBoxSizing' : 
-			(divStyle.boxSizing === ''? 'boxSizing' : false))))));
+			(divStyle.MsBoxSizing === ''? 'msBoxSizing' :
+			(divStyle.boxSizing === ''? 'boxSizing' : false)));
 
 	if ( $.support.boxSizing && $.support.boxSizing !== "boxSizing" ){
 	
