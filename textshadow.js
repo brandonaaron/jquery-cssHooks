@@ -1,25 +1,29 @@
 (function($) {
-	var props = "Color X Y Blur".split(' '),
+	var propStr = 'textShadow',
+		colorStr = 'Color',
+		props = (colorStr + " X Y Blur").split(' '),
 		support = $.support,
 		rWhitespace = /\s/,
 		div = document.createElement('div'),
 		divStyle = div.style;
 
 	support.textShadow = (divStyle.textShadow === '');
-	div = null;
+	div = divStyle = null;
 
 	if ($.cssHooks && support.textShadow) {
 		$.each(props, function(i, suffix) {
-			var hook = 'textShadow' + suffix;
+			var hook = propStr + suffix;
 			
 			$.cssHooks[hook] = {
 				get: function(elem, computed, extra) {
-					return (function(elem, pos) {
-						var shadow = $.css(elem, 'textShadow'),
+					return (function(elem, pos, prop) {
+						var shadow = $.css(elem, propStr),
 							color = $.color.normalize(shadow),
 							ret;
+							
+						console.log('getting', prop)
 
-						if (pos === 0) {
+						if (prop === colorStr) {
 							ret = 'rgb'
 									+ (color.alpha ? 'a' : '') + '('
 									+ color.r + ', '
@@ -33,11 +37,11 @@
 						}
 						
 						return ret;
-					})(elem, i);
+					})(elem, i, suffix);
 				},
 				set: function(elem, value) {
 					elem.style.textShadow = (function(string, value, index) {
-						var color_part = $.style(elem, 'textShadowColor'),
+						var color_part = $.style(elem, propStr + colorStr),
 							parts = string.replace(color_part, '').split(rWhitespace),
 							ret;
 						
@@ -48,11 +52,13 @@
 						}
 						
 						return color_part + parts.join(' ');
-					})($.css(elem, 'textShadow'), value, i);
+					})($.css(elem, propStr), value, i);
 				}
 			};
 			
-			if (i !== 0) {
+			if (suffix !== colorStr) {
+				$.cssNumber[hook] = true;
+				
 				$.fx.step[hook] = function(fx) {
 					$.cssHooks[hook].set(fx.elem, fx.now + fx.unit);
 				};
