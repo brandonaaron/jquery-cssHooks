@@ -13,7 +13,6 @@
 		(div.style.WebkitBorderImage === '' ? 'WebkitBorderImage' :
 		(div.style.borderImage === '' ? 'borderImage' : false));
 
-	
     if ( $.support.borderImage && $.support.borderImage !== "borderImage" ){
         
         $.cssHooks.borderImage = {
