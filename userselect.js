@@ -5,6 +5,7 @@
 (function($) {
 
 	//User Select cssHook
+	
 	var div = document.createElement( "div" ),
 		divStyle = div.style,
 		$.support.userSelect =
