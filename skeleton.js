@@ -11,17 +11,17 @@
  */
 (function( $ ) {
 
-var div = document.createElement('div'),
+var div = document.createElement("div"),
 	divStyle = div.style,
-	propertyName = '<propertyName>',
+	propertyName = "<propertyName>",
 	// with leading upper-case
-	suffix = '<PropertyName>',
+	suffix = "<PropertyName>",
 	testProperties = [
-		'O' + suffix,
-		// 'ms', not 'Ms'
-		'ms' + suffix,
-		'Webkit' + suffix,
-		'Moz' + suffix,
+		"O" + suffix,
+		// "ms", not "Ms"
+		"ms" + suffix,
+		"Webkit" + suffix,
+		"Moz" + suffix,
 		// prefix-less property
 		propertyName
 	],
@@ -41,10 +41,10 @@ while ( i-- ) {
 }
 // If a proprietary alternative exists for IE678, include another test for it
 if ( !supportProperty ) {
-	$.support.MsAlternative = supportMsAlternative = divStyle['<IE alternative>'] === '';
+	$.support.MsAlternative = supportMsAlternative = divStyle["<IE alternative>"] === "";
 }
 
-// the following line should be removed if 'px' is the default unit for this property
+// the following line should be removed if "px" is the default unit for this property
 $.cssNumber[propertyName] = true;
 
 // prefix-less property will likely not need a hook
@@ -54,7 +54,7 @@ if ( supportProperty && supportProperty != propertyName ) {
 
 	// Real cssHooks might be used to normalize implementations inconsistencies in some browsers
 	// for example
-	if ( supportProperty == 'Moz' + suffix ) {
+	if ( supportProperty == "Moz" + suffix ) {
 		propertyHook = {
 			set: function( elem, value ) {
 				elem.style[ supportProperty ] = normalizeFirefoxSet( value );
@@ -68,7 +68,7 @@ if ( supportProperty && supportProperty != propertyName ) {
 		propertyHook = {
 			get: function( elem, computed ) {
 				return (computed ?
-					$.css( elem, supportProperty.replace(/^ms/, 'Ms') ):
+					$.css( elem, supportProperty.replace(/^ms/, "Ms") ):
 					elem.style[supportProperty]
 				)
 			}
@@ -104,7 +104,7 @@ $.fx.step[propertyName] = function( fx ) {
 // The following code can be used as a base to animate more complex values
 /*$.fx.step[propertyName] = function( fx ) {
 	// fx.start and fx.end will probably be parsed on the first step to be computable
-	if ( !fx.start || typeof fx.start === 'string' ) {
+	if ( !fx.start || typeof fx.start === "string" ) {
 		// fix fx.start value
 		if ( !fx.start ) {
 			fx.start =  propertyGet( fx.elem, supportProperty );
