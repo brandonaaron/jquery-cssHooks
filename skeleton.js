@@ -96,7 +96,7 @@ if ( propertyHook ) {
 $.fx.step[propertyName] = function( fx ) {
 	var value = fx.now + fx.unit;
 	propertyHook && propertyHook.set?
-		// Use a getter hook if it exists
+		// Use a setter hook if it exists
 		propertyHook.set( elem, transform ):
 		// Otherwise modify raw DOM for maximum performances
 		elem.style[supportProperty] = transform;
