@@ -1,5 +1,8 @@
-/*! Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
-* User Select cssHook for jQuery 1.4.3+
+/*! 
+* Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
+* User Select cssHook for jQuery
+* Limitations:
+  - Works with jQuery 1.4.3 and higher
 * Licensed under the MIT License (LICENSE.txt).
 */
 (function($) {
@@ -9,13 +12,13 @@
 	var div = document.createElement("div"),
 		divStyle = div.style,
 		$.support.boxSizing =
-			div.style.MozBoxSizing === ''? 'MozBoxSizing' : 
-			(div.style.WebkitBoxSizing === ''? 'WebkitBoxSizing' : 
-			(div.style.MsBoxSizing === ''? 'MsBoxSizing' :
-			(div.style.OBoxSizing === ''? 'OBoxSizing' : 
-			(div.style.ICabBoxSizing === ''? 'ICabBoxSizing' : 
-			(div.style.KhtmlBoxSizing === ''? 'KhtmlBoxSizing' : 
-			(div.style.boxSizing === ''? 'boxSizing' : false))))));
+			divStyle.MozBoxSizing === ''? 'MozBoxSizing' : 
+			(divStyle.WebkitBoxSizing === ''? 'WebkitBoxSizing' : 
+			(divStyle.MsBoxSizing === ''? 'MsBoxSizing' :
+			(divStyle.OBoxSizing === ''? 'OBoxSizing' : 
+			(divStyle.ICabBoxSizing === ''? 'ICabBoxSizing' : 
+			(divStyle.KhtmlBoxSizing === ''? 'KhtmlBoxSizing' : 
+			(divStyle.boxSizing === ''? 'boxSizing' : false))))));
 
 	if ( $.support.boxSizing && $.support.boxSizing !== "boxSizing" ){
 	

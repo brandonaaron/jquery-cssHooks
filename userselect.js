@@ -1,5 +1,8 @@
-/*! Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
-* User Select cssHook for jQuery 1.4.3+
+/*! 
+* Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
+* User Select cssHook for jQuery
+* Limitations:
+  - Works with jQuery 1.4.3 and higher
 * Licensed under the MIT License (LICENSE.txt).
 */
 (function($) {
@@ -9,9 +12,9 @@
 	var div = document.createElement( "div" ),
 		divStyle = div.style,
 		$.support.userSelect =
-		div.style.MozUserSelect === "" ? 'MozUserSelect' :
-		(div.style.WebkitUserSelect === "" ? 'WebkitUserSelect' :
-		(div.style.userSelect === ""  ? 'userSelect' : false));
+		divStyle.MozUserSelect === "" ? 'MozUserSelect' :
+		(divStyle.WebkitUserSelect === "" ? 'WebkitUserSelect' :
+		(divStyle.userSelect === ""  ? 'userSelect' : false));
 			
 	if ( $.support.userSelect && $.support.userSelect !== "userSelect" ){
 		$.cssHooks.userSelect = {

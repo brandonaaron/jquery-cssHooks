@@ -1,6 +1,9 @@
 /*! 
 * Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
-* User Select cssHook for jQuery 1.4.3+
+* User Select cssHook for jQuery
+* Limitations:
+  - Works with jQuery 1.4.3 and higher
+  - Doesn't work in all CSS3 browers (currently)
 * Licensed under the MIT License (LICENSE.txt).
 */
 (function($) {
@@ -9,9 +12,9 @@
     var div = document.createElement( "div" ),
     	divStyle = div.style,
     	$.support.borderImage =
-    	div.style.MozBorderImage === '' ? 'MozBorderImage' :
-    	(div.style.WebkitBorderImage === '' ? 'WebkitBorderImage' :
-    	(div.style.borderImage === '' ? 'borderImage' : false));
+    		divStyle.MozBorderImage === '' ? 'MozBorderImage' :
+    		(divStyle.WebkitBorderImage === '' ? 'WebkitBorderImage' :
+    		(divStyle.borderImage === '' ? 'borderImage' : false));
 
     if ( $.support.borderImage && $.support.borderImage !== "borderImage" ){
         
