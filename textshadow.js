@@ -20,8 +20,6 @@
 						var shadow = $.css(elem, propStr),
 							color = $.color.normalize(shadow),
 							ret;
-							
-						console.log('getting', prop)
 
 						if (prop === colorStr) {
 							ret = 'rgb'
