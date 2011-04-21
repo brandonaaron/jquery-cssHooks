@@ -1,7 +1,7 @@
 /*! 
-*	Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
-*	User Select cssHook for jQuery 1.4.3+
-*	Licensed under the MIT License (LICENSE.txt).
+* Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
+* User Select cssHook for jQuery 1.4.3+
+* Licensed under the MIT License (LICENSE.txt).
 */
 (function($) {
     // Border Image set and get hooks
@@ -27,9 +27,8 @@
             }
 			
         };
-		    
     }
         
     div = divStyle = null;
     
-})(jQuery);
+})(jQuery)
