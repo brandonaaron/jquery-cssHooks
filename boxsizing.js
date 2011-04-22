@@ -10,7 +10,7 @@
     // Box Sizing set and get hooks
 	
 	var div = document.createElement("div"),
-		divStyle = div.style,
+		divStyle = div.style;
 		$.support.boxSizing =
 			divStyle.MozBoxSizing === ''? 'MozBoxSizing' : 
 			(divStyle.WebkitBoxSizing === ''? 'WebkitBoxSizing' : 

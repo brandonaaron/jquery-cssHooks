@@ -94,7 +94,7 @@
 			$.cssHooks.borderRadius.set( fx.elem, fx.now + fx.unit );
 		};
 
-	} else if ( !$.support.borderRadius ) {
+	} else if ( !$.support.borderRadius && "createStyleSheet" in document ) {
 		//BorderRadius Plugin
 		$.cssHooks.borderRadius = {
 			get: function( elem, computed, extra ) {
@@ -103,8 +103,7 @@
 			},
 			set: function( elem, value ) {
 
-				var css = ($.data( elem, "borderRadiusIECSS")) ? 
-					$.data( elem, "borderRadiusIECSS") : document.createStyleSheet("ie_style.css"),
+				var css,
 					parts = value.split(rWhiteSpace),
 					one = parts[0],
 					two = parts[1] || parts[0],
@@ -115,9 +114,12 @@
 						two,
 						three,
 						four
-					],
-					css.cssText = "",
-					css.addRule( "#results", "border-radius:" + values.join(" ") ),
+					];
+					
+					css = ($.data( elem, "borderRadiusIECSS")) ? 
+					$.data( elem, "borderRadiusIECSS") : document.createStyleSheet("ie_style.css")
+					css.cssText = "";
+					css.addRule( "#results", "border-radius:" + values.join(" ") );
 					//Needs to be the directory from root of index.html
 					//or page that uses this js file to the border radius htc file
 					elem.style.behavior = "url(js/border-radius.htc)";

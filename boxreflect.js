@@ -8,7 +8,7 @@
 (function($) {
     // Css3 Box Reflect set and get hooks 
 	var div = document.createElement('div'),
-		divStyle = div.style,
+		divStyle = div.style;
 		$.support.boxReflect =  divStyle.WebkitBoxReflect === '' ? 'WebkitBoxReflect' :
 			(divStyle.MozBoxReflect === '' ? 'MozBoxReflect' :
 			(divStyle.OBoxReflect === '' ? 'OBoxReflect' :

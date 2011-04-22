@@ -9,8 +9,8 @@
 (function($) {
     // Border Image set and get hooks
     
-    var div = document.createElement( "div" ),
-    	divStyle = div.style,
+	var div = document.createElement( "div" ),
+		divStyle = div.style;
     	$.support.borderImage =
     		divStyle.MozBorderImage === '' ? 'MozBorderImage' :
     		(divStyle.WebkitBorderImage === '' ? 'WebkitBorderImage' :
