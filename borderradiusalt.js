@@ -1,57 +1,73 @@
 /*! 
 * Copyright (c) 2011 Tom Ellis (http://www.webmuse.co.uk)
-* User Select cssHook for jQuery
+* Border Radius cssHook for jQuery
 * Limitations:
   - Works with jQuery 1.4.3 and higher
   - Can't animate border radius in IE
 * Licensed under the MIT License (LICENSE.txt).
 */
 (function($) {
-    // Border Radius set and get hooks
 
 	var div = document.createElement("div"),
 		divStyle = div.style,
 		rWhiteSpace = /\s/,
-		dirs = "TopLeft TopRight BottomRight BottomLeft".split(rWhiteSpace);
-		
+		dirs = "TopLeft TopRight BottomRight BottomLeft".split(rWhiteSpace),
+		getRadii = function( n ){
+		    if( !n ) {
+		        return [0]; 
+		    } else if(typeof n == 'number') {
+		        return [n];
+		    } else {
+			    r = n.match(/(\-\d+|\d+)/g) || [0];
+			    for(var i in r) {
+			        r[i] = parseInt(r[i]);
+		    	}
+		    }
+			return r;
+		};
+
 	$.support.borderRadius =
-		divStyle.WebkitBorderRadius === ''? 'WebkitBorderRadius' :
-		(divStyle.MozBorderRadius === ''? 'MozBorderRadius' : 
-		(divStyle.BorderRadius === ''? 'BorderRadius' : false));
+		divStyle.borderRadius === '' ? 'borderRadius' :
+		(divStyle.MozBorderRadius === '' ? 'MozBorderRadius' :
+		(divStyle.WebkitBorderRadius === '' ? 'WebkitBorderRadius' : false));
 	
-	//Browsers support border radius corners differently
+	//Browsers support border radius corners differently (For now)
+
+	$.support.TopLeft = false;
+	$.support.TopRight = false;
+	$.support.BottomLeft = false;
+	$.support.BottomRight = false;
+		
+	if( $.support.borderRadius === 'borderRadius' ) {
+
+		$.support.TopLeft = 'borderTopLeftRadius';
+		$.support.TopRight = 'borderTopLeftRadius';
+		$.support.BottomLeft = 'borderTopLeftRadius';
+		$.support.BottomRight = 'borderTopLeftRadius';		
+		
+	} else if( $.support.borderRadius === 'MozBorderRadius' ) {
+		
+		$.support.TopLeft = 'borderTopLeftRadius';
+		$.support.TopRight = 'borderTopLeftRadius';
+		$.support.BottomLeft = 'borderTopLeftRadius';
+		$.support.BottomRight = 'borderTopLeftRadius';
+		
+	} else if( $.support.borderRadius === 'WebkitBorderRadius' ) {
+		
+		$.support.TopLeft = 'borderTopLeftRadius';
+		$.support.TopRight = 'borderTopLeftRadius';
+		$.support.BottomLeft = 'borderTopLeftRadius';
+		$.support.BottomRight = 'borderTopLeftRadius';		
+	}
 	
-	//Top Left
-	$.support.TopLeft =
-		divStyle.WebkitBorderRadius === ''? 'WebkitBorderTopLeftRadius' : 
-		(divStyle.MozBorderRadius === ''? 'MozBorderRadiusTopleft' : 
-		(divStyle.borderRadius === ''? 'borderTopLeftRadius' : false));
-	
-	//Top Right
-	$.support.TopRight =
-		divStyle.WebkitBorderRadius === ''? 'WebkitBorderTopRightRadius' : 
-		(divStyle.MozBorderRadius === ''? 'MozBorderRadiusTopright' : 
-		(divStyle.borderRadius === ''? 'borderTopRightRadius' : false));
-	
-	//Bottom Left
-	$.support.BottomLeft =
-		divStyle.WebkitBorderRadius === ''? 'WebkitBorderBottomLeftRadius' : 
-		(divStyle.MozBorderRadius === ''? 'MozBorderRadiusBottomleft' : 
-		(divStyle.borderRadius === ''? 'borderBottomLeftRadius' : false));
-	
-	//Bottom Right
-	$.support.BottomRight =
-		divStyle.WebkitBorderRadius === ''? 'WebkitBorderBottomRightRadius' : 
-		(divStyle.MozBorderRadius === ''? 'MozBorderRadiusBottomright' : 
-		(divStyle.borderRadius === ''? 'borderBottomRightRadius' : false));
-	
-	if ( $.support.borderRadius && $.support.borderRadius !== "borderRadius" ){		
+	if ( $.support.borderRadius && $.support.borderRadius !== "borderRadius" ){	
+		//alert('here');
 		//BorderRadius
 		$.cssHooks.borderRadius = {
 			get: function( elem, computed, extra ) {
 
 				return $.map(dirs, function( dir ) {
-					return $.css( elem, $.support[dir] );
+					return $.css( elem, $.support[dir], computed );
 				}).join(" ");
 				
 			},
@@ -83,6 +99,64 @@
 			};
 			
 			$.fx.step[ "border" + dir + "Radius" ] = function( fx ) {
+			
+				/*
+				
+				function ii( n ){
+				    if( !n ) {
+				        return [0]; 
+				    } else if(typeof n == 'number') {
+				        return [n];
+				    } else {
+					    r = n.match(/(\-\d+|\d+)/g) || [0];
+					    for(var i in r) {
+					        r[i] = parseInt(r[i]);
+				    	}
+				    }
+					return r;
+				}
+				
+                if(!fx.endx) {
+                    
+					var i = ii($(fx.elem).css( $.support[dir] ) );
+                    
+					fx.startx = i[0];
+                    fx.starty = i[1]||i[0];
+                    fx.f = ii(fx.end);
+                    fx.endx = fx.f[0];
+                    fx.endy = fx.f[1]||fx.f[0];
+
+                    if((fx.endy - fx.starty) < (fx.endx - fx.startx)) {
+                        fx.which = true;
+                        fx.end = fx.endx;
+                        fx.start = fx.startx;
+                        fx.now = fx.start;
+                        fx.now2 = fx.starty;
+                    } else {
+                        fx.which = false;
+                        fx.end = fx.endy;
+                        fx.start = fx.starty;
+                        fx.now = fx.start;
+                        fx.now2 = fx.startx;
+                    }
+                }
+                fx.now2 = (fx.which)?
+                    fx.starty + ((fx.endy - fx.starty) * fx.pos)
+                :
+                    fx.startx + ((fx.endx - fx.startx) * fx.pos);
+                var set = (fx.which)?
+                    (fx.now + fx.unit+" "+fx.now2 + fx.unit)
+                :
+                    (fx.now2 + fx.unit+" "+fx.now + fx.unit);
+
+				$.cssHooks[ "border" + dir + "Radius" ].set( fx.elem, fx.now + fx.unit+" "+fx.now2 + fx.unit );
+				*/
+                
+				//$.cssHooks[ "border" + dir + "Radius" ].set( fx.elem, set );	
+				//console.log( fx.now + fx.unit+" "+fx.now2 + fx.unit );
+				
+				//$.cssHooks[ "border" + dir + "Radius" ].set( fx.elem, fx.now + fx.unit+" "+fx.now2 + fx.unit );	
+			
 				$.cssHooks[ "border" + dir + "Radius" ].set( fx.elem, fx.now + fx.unit );
 			};
 
@@ -95,6 +169,7 @@
 		};
 
 	} else if ( !$.support.borderRadius && "createStyleSheet" in document ) {
+
 		//BorderRadius Plugin
 		$.cssHooks.borderRadius = {
 			get: function( elem, computed, extra ) {
@@ -130,22 +205,6 @@
 			}
 		};
 		
-		//Todo: Add support for each corner
-		/*$.each( dirs, function( i, dir ) {
-
-			$.cssHooks[ "border" + dir + "Radius"] = {
-			
-				get: function( elem, computed, extra ) {
-
-				},
-				set: function( elem, value ){
-				
-					
-				}
-			};
-			
-		});
-		*/
 	}
 
 	div = divStyle = null;
