@@ -1,4 +1,5 @@
-Copyright 2010 Brandon Aaron (http://brandonaaron.net) and Burin Asavesna (http://helloburin.com) and Tom Ellis (http://www.webmuse.co.uk)
+Copyright 2011 Brandon Aaron (http://brandonaaron.net), Burin Asavesna (http://helloburin.com), Tom Ellis (http://www.webmuse.co.uk),
+ Phil Dokas (http://jetless.org) and Louis-Rémi Babé (http://twitter.com/louis_remi).
  
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
