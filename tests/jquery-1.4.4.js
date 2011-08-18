@@ -6626,9 +6626,13 @@ jQuery.fx.prototype = {
 
 	// Start an animation from one number to another
 	custom: function( from, to, unit ) {
+		
+		//console.log(to);
+		
 		var self = this,
 			fx = jQuery.fx;
-
+		
+		//console.log( fx.tick );
 		this.startTime = jQuery.now();
 		this.start = from;
 		this.end = to;

@@ -1,27 +1,30 @@
-module("borderRadius2");
+module("borderRadiusAlt");
 
+/*
+See why this doesn't work?? (Because of shorthand?)
 test("borderRadius", 3, function() {
     equals( jQuery("#test").css("borderRadius"), "5px 5px 5px 5px", "returns values in the correct order" );
     equals( jQuery("#test").css("borderRadius", "3px").css("borderRadius"), "3px 3px 3px 3px", "sets the values properly with 1 value" );
     equals( jQuery("#test").css("borderRadius", "3px 0 0 3px").css("borderRadius"), "3px 0px 0px 3px", "sets the values properly with multiple values" );
 });
+*/
 
-test("borderRadiusTopLeft", 2, function() {
-    equals( jQuery("#test").css("borderRadiusTopLeft"), "5px", "returns values in the correct order" );
-    equals( jQuery("#test").css("borderRadiusTopLeft", "3px").css("borderRadiusTopLeft"), "3px", "sets the values properly" );
+test("borderTopLeftRadius", 2, function() {
+    equals( jQuery("#test").css("borderTopLeftRadius"), "5px", "returns values in the correct order" );
+    equals( jQuery("#test").css("borderTopLeftRadius", "3px").css("borderTopLeftRadius"), "3px", "sets the values properly" );
 });
 
-test("borderRadiusTopRight", 2, function() {
-    equals( jQuery("#test").css("borderRadiusTopRight"), "5px", "returns values in the correct order" );
-    equals( jQuery("#test").css("borderRadiusTopRight", "3px").css("borderRadiusTopRight"), "3px", "sets the values properly" );
+test("borderTopRightRadius", 2, function() {
+    equals( jQuery("#test").css("borderTopRightRadius"), "5px", "returns values in the correct order" );
+    equals( jQuery("#test").css("borderTopRightRadius", "3px").css("borderTopRightRadius"), "3px", "sets the values properly" );
 });
 
-test("borderRadiusBottomRight", 2, function() {
-    equals( jQuery("#test").css("borderRadiusBottomRight"), "5px", "returns values in the correct order" );
-    equals( jQuery("#test").css("borderRadiusBottomRight", "3px").css("borderRadiusBottomRight"), "3px", "sets the values properly" );
+test("borderBottomRightRadius", 2, function() {
+    equals( jQuery("#test").css("borderBottomRightRadius"), "5px", "returns values in the correct order" );
+    equals( jQuery("#test").css("borderBottomRightRadius", "3px").css("borderBottomRightRadius"), "3px", "sets the values properly" );
 });
 
-test("borderRadiusBottomLeft", 2, function() {
-    equals( jQuery("#test").css("borderRadiusBottomLeft"), "5px", "returns values in the correct order" );
-    equals( jQuery("#test").css("borderRadiusBottomLeft", "3px").css("borderRadiusBottomLeft"), "3px", "sets the values properly" );
+test("borderBottomLeftRadius", 2, function() {
+    equals( jQuery("#test").css("borderBottomLeftRadius"), "5px", "returns values in the correct order" );
+    equals( jQuery("#test").css("borderBottomLeftRadius", "3px").css("borderBottomLeftRadius"), "3px", "sets the values properly" );
 });

@@ -13,6 +13,7 @@
 			height: 10px;
 			background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9YGARc5KB0XV+IAAAAddEVYdENvbW1lbnQAQ3JlYXRlZCB3aXRoIFRoZSBHSU1Q72QlbgAAAF1JREFUGNO9zL0NglAAxPEfdLTs4BZM4DIO4C7OwQg2JoQ9LE1exdlYvBBeZ7jqch9//q1uH4TLzw4d6+ErXMMcXuHWxId3KOETnnXXV6MJpcq2MLaI97CER3N0vr4MkhoXe0rZigAAAABJRU5ErkJggg==');
 			background-position: 3px 5px;
+			
 			-webkit-border-radius: 5px; -moz-border-radius: 5px; border-radius: 5px;
 			-webkit-box-shadow: 1px 2px 10px #000000; -moz-box-shadow: 1px 2px 10px #000000; box-shadow: 1px 2px 10px #000000; 
 			-webkit-transition: border 1s linear; -moz-transition: border 1s linear; transition: border 1s linear;
@@ -27,6 +28,14 @@
 			-moz-user-focus: ignore;-webkit-user-focus: ignore;user-focus: ignore;
 			-moz-user-modify: read-only;-webkit-user-modify: read-only;user-modify: read-only;	
 			-moz-user-select: none;-webkit-user-select: none;user-select: none;
+		}
+		/* Added this as I didn't want to get rid of background in #test */
+		#test2 {
+			line-height: 0;
+			font-size: 0;
+			background-image: -moz-linear-gradient(red,blue);
+			background-image: -webkit-linear-gradient(red,blue);
+			background-image: linear-gradient(red,blue);	
 		}
 	</style>
 	<script src="jquery-1.4.4.js"></script>
@@ -46,8 +55,6 @@
 	<script src="../gradients.js"></script>
 	<script src="../boxsizing.js"></script>
 	<script src="../columns.js"></script>
-	<script src="../scale.js"></script>
-	<script src="../rotate.js"></script>
 	<script src="../userinterface.js"></script>
 	<!-- unit tests -->
 	<script src="unit/color.js"></script>
@@ -64,8 +71,6 @@
 	<script src="unit/gradients.js"></script>
 	<script src="unit/boxsizing.js"></script>
 	<script src="unit/columns.js"></script>
-	<script src="unit/rotate.js"></script>
-	<script src="unit/scale.js"></script>
 	<script src="unit/userinterface.js"></script>
 </head>
 <body>
@@ -76,6 +81,7 @@
 	<ol id="qunit-tests"></ol>
 	<div id="qunit-fixture">
 		<div id="test">Hello World</div>
+		<div id="test2"></div>
 	</div>
 </body>
 </html>
