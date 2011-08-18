@@ -10,15 +10,14 @@
 	
 	var div = document.createElement( "div" ),
 		divStyle = div.style;
-    	$.support.borderImage =
-    		divStyle.MozBorderImage === '' ? 'MozBorderImage' :
-    		(divStyle.WebkitBorderImage === '' ? 'WebkitBorderImage' :
-    		(divStyle.borderImage === '' ? 'borderImage' : false));
-
-    if ( $.support.borderImage && $.support.borderImage !== "borderImage" ){
-        
-        $.cssHooks.borderImage = {
-        
+  
+ 	$.support.borderImage =
+   		divStyle.borderImage === '' ? 'borderImage' :
+   		(divStyle.MozBorderImage === '' ? 'MozBorderImage' :
+   		(divStyle.WebkitBorderImage === '' ? 'WebkitBorderImage' : false));
+    	
+    if ( $.support.borderImage && $.support.borderImage !== "borderImage" ) {       
+        $.cssHooks.borderImage = {       
             get: function( elem, computed, extra ) {
                 return $.css(elem, $.support.borderImage);
             },
