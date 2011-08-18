@@ -8,8 +8,6 @@
 */
 (function($) {
 
-	//User Interface cssHook
-	
 	var div = document.createElement( "div" ),
 		divStyle = div.style,
 		propertyName = 'user',
@@ -21,11 +19,11 @@
 			'Focus'
 		],
 		testProperties = [
+			propertyName,
 			'Moz' + suffix,
 			'Webkit' + suffix,
 			'O' + suffix,
-			'ms' + suffix,
-			propertyName
+			'ms' + suffix
 		],
 		supportProperty,
 		j = props.length;
@@ -53,8 +51,7 @@
 				get: function( elem, computed ) {
 					return ( computed ? $.css( elem, $.support[propertyName+prop] ) : elem.style[$.support[propertyName+prop]] );
 				},
-				set: function( elem, value ) {
-			
+				set: function( elem, value ) {			
 					elem.style[$.support[propertyName+prop]] = value;
 				}
 			};		
