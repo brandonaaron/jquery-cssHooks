@@ -33,12 +33,12 @@
 		divStyle.cssText = cssLinear,
 		linearSettings = function ( value ) {
 			var parts = rLinearSettings.exec( value );
-	        value = value.replace( parts[2] , $.support.linearGradient );
+			value = value.replace( new RegExp(parts[2], 'g') , $.support.linearGradient );
 			return value;
 		},
 		radialSettings = function ( value ) {
 			var parts = rRadialSettings.exec( value );			
-			value = value.replace( parts[2] , $.support.radialGradient );
+			value = value.replace( new RegExp(parts[2], 'g') , $.support.radialGradient );
 			return value;
 		};
 
